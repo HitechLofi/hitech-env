@@ -1,0 +1,12 @@
+@font-face {
+    font-family: "Nerd Font Hack";
+    font-weight: 400;
+    line-height: 1.7;
+    src: url('https://github.com/ryanoasis/nerd-fonts/blob/master/patched-fonts/Hack/Regular/complete/Hack%20Regular%20Nerd%20Font%20Complete%20Mono.ttf') format('truetype');
+}
+@font-face {
+    font-family: "Nerd Font Hack";
+    font-weight: 600;
+    line-height: 1.7;
+    src: url('https://github.com/ryanoasis/nerd-fonts/blob/master/patched-fonts/Hack/Bold/complete/Hack%20Bold%20Nerd%20Font%20Complete%20Mono.ttf') format('truetype');
+}
