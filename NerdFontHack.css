@@ -1,15 +1,15 @@
 @font-face {
-    font-family: "Nerd Font Hack Regular";
+    font-family: "Hack";
     font-weight: 400;
     src: url('https://github.com/ryanoasis/nerd-fonts/blob/master/patched-fonts/Hack/Regular/complete/Hack%20Regular%20Nerd%20Font%20Complete%20Mono.ttf') format('truetype');
 }
 @font-face {
-    font-family: "Nerd Font Hack Bold";
-    font-weight: 600;
+    font-family: "Hack";
+    font-weight: 500;
     src: url('https://github.com/ryanoasis/nerd-fonts/blob/master/patched-fonts/Hack/Bold/complete/Hack%20Bold%20Nerd%20Font%20Complete%20Mono.ttf') format('truetype');
 }
 @font-face {
-    font-family: "Nerd Font Hack Bold2";
-    font-weight: 800;
+    font-family: "Hack";
+    font-weight: 700;
     src: url('https://github.com/ryanoasis/nerd-fonts/blob/master/patched-fonts/Hack/Bold/complete/Hack%20Bold%20Nerd%20Font%20Complete%20Mono.ttf') format('truetype');
 }
