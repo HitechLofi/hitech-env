@@ -1,7 +1,7 @@
 @font-face {
     font-family: "Hack";
     font-weight: 400;
-    src: url('https://github.com/ryanoasis/nerd-fonts/blob/master/patched-fonts/Hack/Regular/complete/Hack%20Regular%20Nerd%20Font%20Complete%20Mono.ttf') format('truetype');
+    src: url('https://raw.githubusercontent.com/ryanoasis/nerd-fonts/master/patched-fonts/Hack/Regular/complete/Hack%20Regular%20Nerd%20Font%20Complete%20Mono.ttf') format('truetype');
 }
 @font-face {
     font-family: "Hack";
