@@ -6,10 +6,10 @@
 @font-face {
     font-family: "Hack";
     font-weight: 500;
-    src: url('https://github.com/ryanoasis/nerd-fonts/blob/master/patched-fonts/Hack/Bold/complete/Hack%20Bold%20Nerd%20Font%20Complete%20Mono.ttf') format('truetype');
+    src: url('https://raw.githubusercontent.com/ryanoasis/nerd-fonts/master/patched-fonts/Hack/Bold/complete/Hack%20Bold%20Nerd%20Font%20Complete%20Mono.ttf') format('truetype');
 }
 @font-face {
     font-family: "Hack";
     font-weight: 700;
-    src: url('https://github.com/ryanoasis/nerd-fonts/blob/master/patched-fonts/Hack/Bold/complete/Hack%20Bold%20Nerd%20Font%20Complete%20Mono.ttf') format('truetype');
+    src: url('https://raw.githubusercontent.com/ryanoasis/nerd-fonts/master/patched-fonts/Hack/Bold/complete/Hack%20Bold%20Nerd%20Font%20Complete%20Mono.ttf') format('truetype');
 }
