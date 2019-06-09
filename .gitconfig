@@ -1,0 +1,61 @@
+[user]
+	email = 3022136+HitechLofi@users.noreply.github.com
+	name = HiTechLoFi
+
+[alias]
+  c = commit -m
+  co = checkout
+  cp = cherry-pick
+  s = status --short
+  rc = rebase --continue
+  b = branch
+  cached = diff --cached
+  undo = reset --soft HEAD~1
+  show-patch = format-patch -1 --stdout
+  sha = rev-parse HEAD
+  origin = config --get remote.origin.url
+  current = rev-parse --abbrev-ref HEAD
+  out = !git log origin/$(git current)..
+  incoming = !git log ..origin/$(git current)
+  publish= !git push origin $(git current)
+  id = !echo "git clone --recursive $(git origin) --branch $(git current)"
+  recent = !git for-each-ref --sort=-committerdate --format='%(refname:short)' refs/heads/ | head -n 20
+  fixup = "!f() { git commit --fixup=$1; git rebase -i --autosquash $1~1; }; f"
+  fixit = "!f() { git commit --fixup=$1; GIT_SEQUENCE_EDITOR=: git rebase -i --autosquash $1~1; }; f"
+  wip = !git add --all . && git commit -m 'WIP'
+  root = !pwd
+  back = checkout -
+  upstream = !git branch --set-upstream-to=origin/$(git current) $(git current)
+  repo=!git remote -v | grep '@.*fetch' | sed 's/.*:\\(.*\\).git.*/\\1/g'
+  pr=!open https://github.com/$(git repo)/compare/$(git current)?expand=1
+
+  l= !BRANCH=`git recent | fzf` && git checkout ${BRANCH}
+  ladd= !FILES=`git status -s | awk '{ print $2 }' | fzf -x -m` && git add --all ${FILES};
+  lfix= !HASH=`git log --pretty=oneline | head -n 100 | fzf` && git fixit `echo ${HASH} | awk '{ print $1 }'`
+  lshow= !HASH=`git log --pretty=oneline | head -n 100 | fzf` && git show `echo ${HASH} | awk '{ print $1 }'`
+  llog= !HASH=`git log --pretty=oneline | head -n 100 | fzf` && git diff `echo ${HASH} | awk '{ print $1 }'`^!
+  lrebase= !HASH=`git log --pretty=oneline | head -n 100 | fzf` && git rebase -i `echo ${HASH} | awk '{ print $1 }'`^
+  lvim= !FILES=`git status -s | awk '{ print $2 }' | fzf -x -m` && vim -O ${FILES}
+  lgrep= !sh -c 'FILES=`git grep -l -A 0 -B 0 $1 $2 | fzf -x -m` && vim -O `echo ${FILES} | cut -d':' -f1 | xargs`' -
+  lvimlog= !HASH=`git log --pretty=oneline | head -n 50 | fzf` && HASHZ=`echo ${HASH} | awk '{ print $1 }'` && FILES=`git show --pretty='format:' --name-only $HASHZ | grep -v -e '^$' | fzf -x -m` && vim -O ${FILES}
+  lreset= !HASH=`git log --pretty=oneline | head -n 50 | fzf` && git reset --soft `echo ${HASH} | awk '{ print $1 }'`^
+[color]
+	ui = true
+[color "diff-highlight"]
+	oldNormal = red bold
+	oldHighlight = red bold 52
+	newNormal = green bold
+	newHighlight = green bold 22
+[color "diff"]
+	meta = yellow
+	frag = magenta bold
+	commit = yellow bold
+	old = red bold
+	new = green bold
+	whitespace = red reverse
+[diff-so-fancy]
+	markEmptyLines = true
+[core]
+	pager = diff-so-fancy | less --tabs=4 -RFX
+[credential]
+	helper = cache
