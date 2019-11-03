@@ -1,7 +1,9 @@
 [user]
 	email = 3022136+HitechLofi@users.noreply.github.com
 	name = HiTechLoFi
-
+[core]
+  editor = nvim
+  pager = diff-so-fancy | less --tabs=4 -RFX
 [alias]
   c = commit -m
   co = checkout
@@ -9,7 +11,9 @@
   s = status --short
   rc = rebase --continue
   b = branch
-  cached = diff --cached
+  newb = checkout -b
+  staged = diff --staged
+  d = diff -- . ':(exclude)*package-lock.json'
   undo = reset --soft HEAD~1
   show-patch = format-patch -1 --stdout
   sha = rev-parse HEAD
@@ -17,7 +21,7 @@
   current = rev-parse --abbrev-ref HEAD
   out = !git log origin/$(git current)..
   incoming = !git log ..origin/$(git current)
-  publish= !git push origin $(git current)
+  publish= !git push -u origin $(git current)
   id = !echo "git clone --recursive $(git origin) --branch $(git current)"
   recent = !git for-each-ref --sort=-committerdate --format='%(refname:short)' refs/heads/ | head -n 20
   fixup = "!f() { git commit --fixup=$1; git rebase -i --autosquash $1~1; }; f"
@@ -29,7 +33,7 @@
   repo=!git remote -v | grep '@.*fetch' | sed 's/.*:\\(.*\\).git.*/\\1/g'
   pr=!open https://github.com/$(git repo)/compare/$(git current)?expand=1
 
-  l= !BRANCH=`git recent | fzf` && git checkout ${BRANCH}
+  lb= !BRANCH=`git recent | fzf` && git checkout ${BRANCH}
   ladd= !FILES=`git status -s | awk '{ print $2 }' | fzf -x -m` && git add --all ${FILES};
   lfix= !HASH=`git log --pretty=oneline | head -n 100 | fzf` && git fixit `echo ${HASH} | awk '{ print $1 }'`
   lshow= !HASH=`git log --pretty=oneline | head -n 100 | fzf` && git show `echo ${HASH} | awk '{ print $1 }'`
@@ -43,19 +47,23 @@
 	ui = true
 [color "diff-highlight"]
 	oldNormal = red bold
-	oldHighlight = red bold 52
+	oldHighlight = white bold red
 	newNormal = green bold
-	newHighlight = green bold 22
+	newHighlight = white bold green
 [color "diff"]
-	meta = yellow
-	frag = magenta bold
+	meta = black bold
+	frag = blue bold
 	commit = yellow bold
 	old = red bold
 	new = green bold
 	whitespace = red reverse
-[diff-so-fancy]
-	markEmptyLines = true
-[core]
-	pager = diff-so-fancy | less --tabs=4 -RFX
-[credential]
-	helper = cache
+[merge "npm-merge-driver"]
+	name = automatically merge npm lockfiles
+	driver = npx npm-merge-driver merge %A %O %B %P
+[rerere]
+	enabled = 1
+[filter "lfs"]
+	process = git-lfs filter-process
+	required = true
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f

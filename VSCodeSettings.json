@@ -1,0 +1,168 @@
+{
+  "zenMode.hideTabs": true,
+  "zenMode.fullScreen": false,
+  "editor.renderWhitespace": "boundary",
+  "editor.lineHeight": 22,
+  "editor.lineNumbers": "interval",
+  "git.autofetch": true,
+  "editor.tabSize": 2,
+  "editor.renderLineHighlight": "gutter",
+  "editor.scrollBeyondLastLine": false,
+  "editor.smoothScrolling": true,
+  "editor.tabCompletion": "on",
+  "editor.cursorBlinking": "smooth",
+  "editor.cursorSmoothCaretAnimation": true,
+  "editor.cursorWidth": 3,
+  "editor.formatOnPaste": true,
+  "editor.fontFamily": "Fira Code Retina",
+  "editor.fontLigatures": true,
+  "workbench.tree.renderIndentGuides": "always",
+  "editor.renderIndentGuides": false,
+  "workbench.tree.indent": 20,
+  "workbench.iconTheme": "material-icon-theme",
+  "workbench.activityBar.visible": true,
+  "workbench.editor.showTabs": false,
+  "workbench.statusBar.visible": true,
+  "workbench.editor.enablePreview": false,
+  "explorer.openEditors.visible": 0,
+  "window.menuBarVisibility": "default",
+  "breadcrumbs.enabled": true,
+  "editor.renderControlCharacters": false,
+  "editor.cursorSurroundingLines": 7,
+  "editor.fontSize": 15,
+  "files.trimTrailingWhitespace": true,
+  "files.trimFinalNewlines": true,
+  "debug.inlineValues": true,
+  "vim.camelCaseMotion.enable": true,
+  "vim.cursorStylePerMode.insert": "line",
+  "vim.cursorStylePerMode.normal": "underline",
+  "vim.cursorStylePerMode.replace": "underline",
+  "vim.cursorStylePerMode.visual": "block",
+  "vim.cursorStylePerMode.visualblock": "block",
+  "vim.cursorStylePerMode.visualline": "block",
+  "vim.hlsearch": true,
+  "vim.leader": "<space>",
+  "vim.useSystemClipboard": true,
+  "vim.useCtrlKeys": true,
+  "vim.visualstar": true,
+  "javascript.format.semicolons": "insert",
+  "javascript.preferences.quoteStyle": "single",
+  "javascript.suggest.completeFunctionCalls": true,
+  "javascript.referencesCodeLens.enabled": true,
+  "typescript.preferences.quoteStyle": "single",
+  "typescript.suggest.completeFunctionCalls": true,
+  "vim.normalModeKeyBindingsNonRecursive": [
+    {
+      "before": ["d"],
+      "after": [ "\"", "_", "d" ]
+    }
+  ],
+  "vim.normalModeKeyBindings": [
+    {
+      "before": ["<C-u>"],
+      "after": ["2", "0", "k", "z", "t"]
+    },
+    {
+      "before": ["<C-d>"],
+      "after": ["2", "0", "j", "z", "b"]
+    },
+    {
+      "before": ["<space>", "<space>"],
+      "commands": ["workbench.action.showCommands"]
+    },
+    {
+      "before": ["<space>", "d"],
+      "commands": ["editor.action.revealDefinition"]
+    },
+    {
+      "before": ["<space>", ","],
+      "commands": ["workbench.action.openGlobalKeybindings"]
+    },
+    {
+      "before": ["<space>", "o"],
+      "commands": ["workbench.action.quickOpen"]
+    },
+    {
+      "before": ["<space>", "f"],
+      "commands": ["workbench.action.findInFiles"]
+    },
+    {
+      "before": ["<space>", "t"],
+      "commands": ["editor.action.goToTypeDefinition"]
+    },
+    {
+      "before": ["<space>", "i"],
+      "commands": ["editor.action.showHover"]
+    },
+    {
+      "before": ["<space>", "s"],
+      "commands": ["workbench.action.files.save"]
+    },
+    {
+      "before": ["<space>", "z"],
+      "commands": ["workbench.action.toggleZenMode"]
+    },
+    {
+      "before": ["<space>", "b"],
+      "commands": ["workbench.action.navigateBack"]
+    },
+    {
+      "before": ["<space>", "r"],
+      "commands": ["editor.action.referenceSearch.trigger"]
+    },
+    {
+      "before": ["<space>", "g", "u"],
+      "commands": ["git.revertChange"]
+    },
+    {
+      "before": ["g", "p"],
+      "commands": ["workbench.action.editor.previousChange"]
+    },
+    {
+      "before": ["g", "n"],
+      "commands": ["workbench.action.editor.nextChange"]
+    },
+    {
+      "before": ["u"],
+      "commands": ["undo"]
+    },
+    {
+      "before": ["<C-r>"],
+      "commands": ["redo"]
+    },
+    {
+      "before": ["<space>", "q"],
+      "commands": [":q"]
+    },
+    {
+      "before": ["<space>", "p"],
+      "commands": ["workbench.action.openSettingsJson"]
+    },
+    {
+      "before": ["="],
+      "commands": ["editor.action.reindentlines"]
+    },
+    {
+      "before": ["<space>", "k"],
+      "commands": [":noh"]
+    },
+    {
+      "before": ["<space>", "n"],
+      "commands": [":tabnext"]
+    }
+  ],
+  "vim.visualModeKeyBindings": [
+    {
+      "before": ["="],
+      "commands": ["editor.action.reindentselectedlines"]
+    }
+  ],
+  "vim.autoindent": true,
+  "diffEditor.ignoreTrimWhitespace": true,
+  "files.watcherExclude": {
+    "**/.git/objects/**": true,
+    "**/.git/subtree-cache/**": true,
+    "**/node_modules/*/**": true
+  },
+  "workbench.colorTheme": "BeardedTheme Vivid"
+}

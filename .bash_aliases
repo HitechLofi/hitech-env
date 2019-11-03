@@ -94,3 +94,17 @@ export PS1="🌀 \[\e[36;1m\]\w\[\e[35;2m\] \e[5m👾 \[\e[33;1m\]\[\e[m\]"
 # export CLICOLOR=1
 # export LSCOLORS=ExFxBxDxCxegedabagacad
 # export TERM=xterm-256color
+
+# --files: List files that would be searched but do not search
+# --no-ignore: Do not respect .gitignore, etc...
+# --hidden: Search hidden files and folders
+# --follow: Follow symlinks
+# --glob: Additional conditions for search (in this case ignore everything in the .git/ folder)
+# --preview "bat --theme="GitHub" --style=numbers,changes --color always
+# export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --follow --glob "!.git/*"'
+export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --follow -g "!{.git,node_modules}/*" 2> /dev/null'
+export BAT_THEME="GitHub"
+export FZF_COMPLETION_OPTS="--preview '(bat --theme="$BAT_THEME" --color=always --style=numbers,changes,header {} || cat {} || tree -C {}) 2> /dev/null | head -200'"
+export FZF_CTRL_T_OPTS="$FZF_COMPLETION_OPTS"
+export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+export FZF_DEFAULT_OPTS=$FZF_DEFAULT_OPTS' --color=fg:#fafafa,bg:#121212,hl:#7d8ec9 --color=fg+:#b57af5,bg+:#262626,hl+:#5fd7ff --color=info:#54596b,prompt:#5bf4fc,pointer:#af5fff --color=marker:#94f7f7,spinner:#af5fff,header:#a1c8f5'
