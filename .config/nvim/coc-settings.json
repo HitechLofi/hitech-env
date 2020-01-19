@@ -1,0 +1,38 @@
+{
+  "suggest.echodocSupport": true,
+  "suggest.maxCompleteItemCount": 20,
+  "coc.preferences.formatOnSaveFiletypes": ["ts", "tsx", "elm", "typescript", "typescriptreact"],
+  "prettier.singleQuote": true,
+  "suggest.autoTrigger": "trigger",
+  "suggest.snippetIndicator": "→",
+  "suggest.enablePreview": true,
+  "suggest.timeout": 5000,
+  "suggest.noselect": true,
+  "diagnostic.errorSign": "💩",
+  "diagnostic.warningSign": "🤔",
+  "diagnostic.infoSign": "🤔",
+  "diagnostic.maxWindowHeight": 30,
+  "diagnostic.maxWindowWidth": 110,
+  "codeLens.enable": false,
+  "git.addedSign.hlGroup": "GitGutterAdd",
+  "git.changedSign.hlGroup": "GitGutterChange",
+  "git.removedSign.hlGroup": "GitGutterDelete",
+  "git.topRemovedSign.hlGroup": "GitGutterDelete",
+  "git.changeRemovedSign.hlGroup": "GitGutterChangeDelete",
+  "list.insertMappings": {
+    "<C-c>": "feedkeys:\\<Esc>",
+    "<C-r>": "do:refresh",
+    "<C-n>": "normal:j",
+    "<C-p>": "normal:k"
+  },
+  "languageserver": {
+    "elmLS": {
+      "command": "elm-language-server",
+      "filetypes": ["elm"],
+      "rootPatterns": ["elm.json"],
+      "initializationOptions": {
+        "elmAnalyseTrigger": "change"
+      }
+    }
+  }
+}
