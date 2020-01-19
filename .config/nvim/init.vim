@@ -1,4 +1,4 @@
-let myTheme = 'light'
+let myTheme = 'dark'
 
 " ~~~~~~~~~~~~~~~~~~~
 "       INDEX
@@ -10,15 +10,15 @@ let myTheme = 'light'
 " go-STATUS-LINE-COLORS
 " go-PLUGIN-SETTINGS
 "   > go-plug-TAB-BAR
+"   > go-plug-EASYMOTION
+"   > go-plug-MOVE
 "   > go-plug-COMPILE
-"   > go-plug-AIRLINE
 "   > go-plug-POSTGRES
 "   > go-plug-JAVASCRIPT
 "   > go-plug-GIT
 "   > go-plug-MARKDOWN
 "   > go-plug-RG
 "   > go-plug-FZF
-"   > go-plug-NERDTREE
 "   > go-plug-DEVICONS
 "   > go-plug-TODO
 "   > go-plug-BOOKMARK
@@ -30,63 +30,48 @@ let myTheme = 'light'
 "                                    go-PLUGINS                                    "
 " ================================================================================ "
 if has('nvim')
-  call plug#begin('~/.local/share/nvim/plugged')
-  Plug 'flazz/vim-colorschemes'
-  Plug 'ap/vim-css-color'
+  call plug#begin('~/.config/nvim/plugins')
   Plug 'ryanoasis/vim-devicons'
   Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
   Plug 'junegunn/fzf.vim'
-  Plug 'scrooloose/nerdtree'
-  Plug 'jistr/vim-nerdtree-tabs'
   Plug 'tpope/vim-fugitive'
   Plug 'junegunn/gv.vim'
-  Plug 'airblade/vim-gitgutter'
   Plug 'godlygeek/tabular'
-  Plug 'vitalk/vim-simple-todo'
+  Plug 'rhysd/git-messenger.vim'
   Plug 'tpope/vim-surround'
+  Plug 'tpope/vim-eunuch'
   Plug 'tomtom/tcomment_vim'
   Plug 'haya14busa/incsearch.vim'
+  Plug 'haya14busa/incsearch-fuzzy.vim'
   Plug 'bronson/vim-visual-star-search'
   Plug 'christoomey/vim-tmux-navigator'
   Plug 'tmux-plugins/vim-tmux-focus-events'
-  Plug 'easymotion/vim-easymotion'
   Plug 'matze/vim-move'
-  " Plug 'yuttie/comfortable-motion.vim'
-  Plug 'gcavallanti/vim-noscrollbar'
-  Plug 'w0rp/ale'
 
-  " Writing
-  Plug 'reedes/vim-colors-pencil'
-  Plug 'reedes/vim-wordy'
-  Plug 'reedes/vim-lexical'
-  Plug 'beloglazov/vim-online-thesaurus'
-  Plug 'reedes/vim-litecorrect'
-  Plug 'reedes/vim-textobj-sentence'
-  Plug 'reedes/vim-textobj-quote'
-  Plug 'kana/vim-textobj-user'
-  Plug 'junegunn/limelight.vim'
-  Plug 'junegunn/goyo.vim'
+  Plug 'itchyny/lightline.vim'
+  Plug 'majutsushi/tagbar'
+  Plug 'janko-m/vim-test'
+
+  Plug 'mbbill/undotree'
+
+  " Directory browser
+  Plug 'scrooloose/nerdtree'
 
   " Languages
-  " Plug 'sheerun/vim-polyglot'
-  Plug 'plasticboy/vim-markdown'
-  " Plug 'pangloss/vim-javascript'
   Plug 'othree/yajs.vim'
-  Plug 'othree/es.next.syntax.vim'
-  Plug 'mxw/vim-jsx'
-  " Plug 'leafgarland/typescript-vim'
-  " Plug 'wavded/vim-stylus'
-  " Plug 'posva/vim-vue'
-  " Plug 'digitaltoad/vim-pug'
-  " Plug 'lifepillar/pgsql.vim'
-  " Plug 'keith/swift.vim'
-  Plug 'styled-components/vim-styled-components'
-  " Plug 'hail2u/vim-css3-syntax'
-  " Plug 'eslint/eslint'
+  Plug 'leafgarland/typescript-vim'
+  " Plug 'herringtondarkholme/yats.vim'
+  Plug 'maxmellon/vim-jsx-pretty'
+  Plug 'keith/swift.vim'
+  Plug 'andys8/vim-elm-syntax', { 'for': ['elm'] }
+  Plug 'styled-components/vim-styled-components', { 'branch': 'main' }
+  " Use release branch
+  Plug 'neoclide/coc.nvim', {'branch': 'release'}
+  Plug 'honza/vim-snippets'
+  Plug 'janko/vim-test'
 
   " Misc
   Plug 'Raimondi/delimitMate' " automatic closing of braces, etc.
-  Plug 'lifepillar/vim-cheat40' " vim commands cheatsheet
   call plug#end() " Call :PlugInstall to install plugins.
 endif
 
@@ -97,44 +82,29 @@ function! SetTheme(theme)
   if a:theme == 'dark'
     " Dark
     set background=dark
-    " colorscheme monokain
-    " colorscheme neonwave
-    " color pencil
     color Parapluie
-    " let g:airline_theme = 'term'
-    " let g:airline_theme = 'pencil'
-    let g:airline_theme = 'raven'
-    " let g:airline_theme = 'durant'
   else
     " Light
     set background=light
-    " colorscheme hemisu
-    " colorscheme soda
-    " colorscheme bubblegum-256-light
-    " color PaperColor
-    " color github
-    " color pencil
     color Parasol
-    " let g:airline_theme = 'lucius'
-    " let g:airline_theme = 'pencil'
-    let g:airline_theme = 'light'
   endif
+
   call CustomizeTheme(a:theme)
 endfunction
 
 function! CustomizeTheme(theme)
   if a:theme == 'dark'
     hi Normal guibg=none ctermbg=none
-    hi NonText guifg=#242447 guibg=none ctermbg=none
-    " hi NonText guifg=#00a245 guibg=none ctermbg=none
-    hi BookmarkLine guibg=#000000 ctermbg=235
-    hi BookmarkSign ctermbg=NONE ctermfg=white
-    hi TabLineSel guibg=none ctermbg=none guifg=#eeeeee ctermfg=white gui=bold cterm=bold
-    hi TabLineSelPointer guibg=none ctermbg=none guifg=#ff00ff ctermfg=white gui=bold cterm=bold
-    hi TabLineFill guibg=none ctermbg=none guifg=244 ctermfg=244 gui=bold cterm=bold
-    hi TabLine guibg=none ctermbg=none guifg=#5C5C5C ctermfg=244 gui=none cterm=bold
+    hi NonText guifg=#575757 guibg=none ctermbg=none
     hi MatchParen guibg=#323232 ctermbg=237 guifg=#888888 ctermfg=white
     hi Search guibg=#7B00D2 guifg=none gui=bold ctermbg=237 cterm=bold
+
+    hi TabLine guibg=#333333 guifg=#aa88ee gui=bold
+    hi TabLineSel guibg=#442288 guifg=#aa88ee gui=bold
+    hi TabLineFileSel guibg=#442288 guifg=#ffffff gui=bold
+    hi TabLineDirSel guibg=#442288 guifg=#aa88ee gui=bold
+    hi TabLineFile guibg=#333333 guifg=#aaaaee gui=bold
+    hi TabLineDir guibg=#333333 guifg=#8888bb gui=bold
 
     hi StatusLine guibg=NONE guifg=#777777 gui=none
     hi StatusLineNC guibg=NONE guifg=#333333 gui=none
@@ -157,10 +127,17 @@ function! CustomizeTheme(theme)
     hi NonText guifg=#BBBBBB guibg=none ctermbg=none
     hi BookmarkLine guibg=158 ctermbg=158 guibg=none ctermfg=none
     hi BookmarkSign guibg=none ctermbg=none guifg=black ctermfg=black
-    hi TabLineSel guibg=none ctermbg=none guifg=black ctermfg=black gui=bold cterm=bold
-    hi TabLineFill guibg=none ctermbg=none guifg=253 ctermfg=253 gui=bold cterm=bold
+    " hi TabLineSel guibg=none ctermbg=none guifg=black ctermfg=black gui=bold cterm=bold
+    " hi TabLineFill guibg=none ctermbg=none guifg=253 ctermfg=253 gui=bold cterm=bold
     " hi TabLine guibg=none ctermbg=242 guifg=253 ctermfg=253 gui=none cterm=none
-    hi TabLine guibg=none ctermbg=none guifg=#999999 ctermfg=253 gui=none cterm=none
+    " hi TabLine guibg=#555555 ctermbg=none guifg=#999999 ctermfg=253 gui=none cterm=none
+
+    hi TabLineSel guibg=#442288 guifg=#aa88ee gui=bold
+    hi TabLineFileSel guibg=#442288 guifg=#ffffff gui=bold
+    hi TabLineDirSel guibg=#442288 guifg=#aa88ee gui=bold
+    hi TabLineFile guibg=default guifg=#aaaaee gui=bold
+    hi TabLineDir guibg=default guifg=#8888bb gui=bold
+
     hi MatchParen guibg=#eeeeee ctermbg=254 guifg=#777777 ctermfg=black
     hi Search guibg=#FECB32 guifg=none gui=bold ctermbg=221 cterm=bold
 
@@ -181,7 +158,7 @@ function! CustomizeTheme(theme)
     call matchadd('TrailingSpace', '\s\+$', 80)
   endif
   " Theme modification
-  hi VertSplit guibg=none guifg=#cccccc ctermbg=none ctermfg=white
+  hi VertSplit guibg=none guifg=#333333 ctermbg=none ctermfg=none
   hi Constant guibg=none ctermbg=none
   hi Special guibg=none ctermbg=none
   hi Group guibg=none ctermbg=none
@@ -239,7 +216,7 @@ nnoremap <C-o> <C-i>
 nmap <leader>i :echo expand('%:p:h') . "/"<CR>
 nnoremap <leader>k :noh<return><esc>
 nnoremap <leader>p :vsp $MYVIMRC<CR>
-nnoremap <leader>v :source $MYVIMRC<CR>
+nnoremap <leader>v :source $MYVIMRC<CR>:LightlineReload<CR>
 nnoremap <leader>q :q<CR>
 nnoremap <leader>s :w<CR>
 nnoremap <leader>t :tabnew<CR>
@@ -249,29 +226,27 @@ nnoremap <leader>r :%s///g<left><left>
 
 " Git
 nnoremap <leader>gd :Gdiff<CR>
-nnoremap <leader>gu :Gdiff<CR>
-nnoremap <leader>gs :Gstatus<CR>
-nnoremap <leader>gh :GV<CR>
-nmap <leader>gu <Plug>GitGutterUndoHunk
-nmap gp <Plug>GitGutterPrevHunk
-nmap gn <Plug>GitGutterNextHunk
+nmap gp <Plug>(coc-git-prevchunk)
+nmap gn <Plug>(coc-git-nextchunk)
+nmap <leader>gs <Plug>(coc-git-chunkinfo)
+nmap <leader>gc <Plug>(coc-git-commit)
+nnoremap <silent> <leader>gf :CocCommand git.foldUnchanged<CR>
+nnoremap <silent> <leader>gu :CocCommand git.chunkUndo<CR>
 
 nnoremap <leader>f :Rg<space>
 vnoremap <leader>f y:Rg<space><C-r>0<CR>
 nnoremap <leader>* viwy:Rg<space><C-r>0<CR>
-nnoremap <leader>b :retab<CR>:%s/\s\+$//e<CR>
-nnoremap <leader>c :call<space>CompileCode()<CR>
-nnoremap <leader>0 a★<space><esc>
-nnoremap <leader>1 1gt:NERDTreeTabsFind<CR><C-w><C-w>
-nnoremap <leader>2 2gt:NERDTreeTabsFind<CR><C-w><C-w>
-nnoremap <leader>3 3gt:NERDTreeTabsFind<CR><C-w><C-w>
-nnoremap <leader>4 4gt:NERDTreeTabsFind<CR><C-w><C-w>
-nnoremap <leader>5 5gt:NERDTreeTabsFind<CR><C-w><C-w>
-nnoremap <leader>6 6gt:NERDTreeTabsFind<CR><C-w><C-w>
-nnoremap <leader>7 7gt:NERDTreeTabsFind<CR><C-w><C-w>
-nnoremap <leader>8 8gt:NERDTreeTabsFind<CR><C-w><C-w>
-nnoremap <leader>9 9gt:NERDTreeTabsFind<CR><C-w><C-w>
 nnoremap * *N
+nnoremap <leader>t :tabnew<CR>
+nnoremap <leader>1 :tabn1<CR>
+nnoremap <leader>2 :tabn2<CR>
+nnoremap <leader>3 :tabn3<CR>
+nnoremap <leader>4 :tabn4<CR>
+nnoremap <leader>5 :tabn5<CR>
+nnoremap <leader>6 :tabn6<CR>
+nnoremap <leader>7 :tabn7<CR>
+nnoremap <leader>8 :tabn8<CR>
+nnoremap <leader>9 :tabn9<CR>
 
 " Terminal
 tnoremap <Esc> <C-\><C-n>
@@ -279,6 +254,7 @@ tnoremap <Esc> <C-\><C-n>
 " Delete and cut and paste FIXED :D
 nnoremap p p`[v`]=<C-o>
 nnoremap P P`[v`]=<C-o>
+xnoremap p pgv"@=v:register.'y'<cr>
 nnoremap x "_x
 nnoremap X "_X
 nnoremap c "_c
@@ -286,9 +262,6 @@ nnoremap C "_C
 nnoremap d "_d
 nnoremap D "_D
 vnoremap d "_d
-nnoremap cw "_cw
-nnoremap Cw "_Cw
-vnoremap cw "_cw
 nnoremap dw "_dw
 nnoremap Dw "_Dw
 vnoremap dw "_dw
@@ -315,25 +288,32 @@ xnoremap <expr> p 'pgv"'.v:register.'y`>'
 "                                    go-SETTINGS                                   "
 " ================================================================================ "
 if has("autocmd")
-  autocmd BufEnter *.svelte :setlocal filetype=html
+  autocmd ColorScheme * call SetTheme(myTheme)
+  autocmd filetype crontab setlocal nobackup nowritebackup
+  " set filetypes as typescript.tsx
+  autocmd BufNewFile,BufRead *.tsx,*.jsx set filetype=typescript.tsx
   autocmd BufRead /tmp/psql.edit.* set syntax=sql
   autocmd BufEnter * :syntax sync fromstart
-  autocmd BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$")
-        \| exe "normal! g'\"" | endif
+  " autocmd BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$")
+  "       \| exe "normal! g'\"" | endif
+  " au BufWinLeave *.elm mkview
+  " au BufWinEnter *.elm silent loadview
 endif
 syntax enable       " enable syntax processing
 filetype plugin on
 set tags=./tags;
-let g:vimwiki_list = [{'path': '$HOME/Dropbox/Workspace'}]
+set noautochdir
 set autoread
+set autowriteall
 set ignorecase
 set smartcase
 set so=5
 set linebreak
+set undofile
 set nobackup
 set noswapfile
 set noshowmode
-set number
+set nonumber
 set numberwidth=2
 set linespace=0
 set whichwrap=b,s,<,>,h,l,[,]
@@ -342,76 +322,288 @@ set tabstop=2       " number of visual spaces per TAB
 set softtabstop=2   " number of spaces in tab when editing
 set expandtab       " tabs are spaces
 set shiftwidth=2
+set smartindent
 set autoindent
 set breakindent
-set showbreak=\ ꜜ\ ··
+set showbreak=ꜜ··
 set list
 set listchars=tab:▸·,trail:·
-" set fillchars=vert:▕
-" set fillchars=vert:\ 
-set fillchars=vert:·
+set fillchars=vert:⎪
 set iskeyword+=-
 set cinoptions=+0
 set showcmd         " show command in bottom bar
 set wildmenu        " visual autocomplete for command menu
+set wildignore+=*/node_modules/,.git,.git/*,node_modules/*,node_modules,.DS_Store
+set wildcharm=<C-z>
+set wildignorecase
+set wildmode=full
+set completeopt=menu,noselect,noinsert
 set lazyredraw      " redraw only when we need to.
 set showmatch       " highlight matching [{()}]
 set incsearch       " search as characters are entered
 set hlsearch        " highlight matches
-set showtabline=2
+set showtabline=0
+set laststatus=2
 set mouse=
 set ff=unix
-if (has("nvim"))
-  let $NVIM_TUI_ENABLE_TRUE_COLOR=1
-endif
-if has('nvim')
-  set t_8f=\[[38;2;%lu;%lu;%lum
-  set t_8b=\[[48;2;%lu;%lu;%lum
-  set termguicolors
-endif
-if !has('gui_running')
-  set t_Co=256
-endif
-
+set termguicolors
+let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
 
 " ================================================================================ "
 "                             go-STATUS-LINE-COLORS                                "
 " ================================================================================ "
 function! InsertStatuslineColor(mode)
   if a:mode == 'i'
-    hi StatusLine guibg=NONE guifg=white cterm=NONE ctermbg=none ctermfg=black
+    hi StatusLine guibg=NONE guifg=white cterm=NONE
   else
-    hi StatusLine guibg=NONE guifg=#777777 cterm=NONE ctermfg=black ctermbg=none
+    hi StatusLine guibg=NONE guifg=#bbbbff cterm=NONE
   endif
 endfunction
-
 function! InsertLeaveActions()
-  hi StatusLine guibg=NONE guifg=#777777 cterm=NONE ctermfg=black ctermbg=none
+  hi StatusLine guibg=NONE guifg=#bbbbff cterm=NONE
 endfunction
-
 au InsertEnter * call InsertStatuslineColor(v:insertmode)
 au InsertLeave * call InsertLeaveActions()
-
 " to handle exiting insert mode via a control-C
 inoremap <c-c> <c-o>:call InsertLeaveActions()<cr><c-c>
-
-" have a permanent statusline to color
-set laststatus=0
-set statusline=
-set statusline+=%=
-set statusline+=\ %{noscrollbar#statusline(15,'▬','■')}
 
 " ================================================================================ "
 "                                go-PLUGIN-SETTINGS                                "
 " ================================================================================ "
-let g:pencil_higher_contrast_ui = 1
+" go-plug-LINENUM
+let g:line_number_interval#enable_at_startup = 1
+let g:line_number_interval = 5
+
+" go-plug-SYNTAX
+syntax match devComment "\v.*$"
+highlight link devComment Comment
+
+" go-plug-INCSEARCH
+function! s:config_easyfuzzymotion(...) abort
+  return extend(copy({
+  \   'converters': [incsearch#config#fuzzyword#converter()],
+  \   'modules': [incsearch#config#easymotion#module({'overwin': 1})],
+  \   'keymap': {"\<CR>": '<Over>(easymotion)'},
+  \   'is_expr': 0,
+  \   'is_stay': 1
+  \ }), get(a:, 1, {}))
+endfunction
+
+noremap <silent><expr> <Space>/ incsearch#go(<SID>config_easyfuzzymotion())
+nmap <leader>/ <Plug>(incsearch-fuzzy-/)
+nmap <leader>? <Plug>(incsearch-fuzzy-?)
+
+" go-plug-MOVE
+let g:move_map_keys = 0
+nmap J V<Plug>MoveBlockDown<Esc>
+nmap K V<Plug>MoveBlockUp<Esc>
+vmap J <Plug>MoveBlockDown
+vmap K <Plug>MoveBlockUp
+nnoremap H V<gv<Esc>
+nnoremap L V>gv<Esc>
+vnoremap H <gv
+vnoremap L >gv
+
+" go-plug-Javascript
+set path=.,src
+set suffixesadd=.js,.jsx
+
+function! LoadMainNodeModule(fname)
+    let nodeModules = "./node_modules/"
+    let packageJsonPath = nodeModules . a:fname . "/package.json"
+    let srcPath = "../../"
+    let srcFilePath = srcPath . a:fname . ".js"
+    let sharedPath = "../../shared/"
+    let sharedFilePath = sharedPath . a:fname . ".js"
+    let appPath = "../../apps/"
+    let appFilePath = appPath . a:fname . ".js"
+    if filereadable(packageJsonPath)
+        return nodeModules . a:fname . "/" . json_decode(join(readfile(packageJsonPath))).main
+    elseif filereadable(expand(srcFilePath))
+        return srcFilePath
+    elseif filereadable(expand(sharedFilePath))
+        return sharedFilePath
+    elseif filereadable(expand(appFilePath))
+        return appFilePath
+    else
+        return nodeModules . a:fname
+    endif
+endfunction
+set includeexpr=LoadMainNodeModule(v:fname)
+
+" go-plut-TEST
+let test#javascript#jest#executable = 'CI=true npm test --colors'
+" make test commands execute using dispatch.vim
+let test#strategy = "neovim"
+" let test#neovim#term_position = "bottom"
+" Run jest for current project
+command! -nargs=0 Jest :call  CocAction('runCommand', 'jest.projectTest')
+" Run jest for current file
+command! -nargs=0 JestCurrent :call  CocAction('runCommand', 'jest.fileTest', ['%'])
+" Run jest for current test
+nnoremap <leader>r :call CocAction('runCommand', 'jest.singleTest')<CR>
+nnoremap <leader>c :BCommits<CR>
+" Init jest in current cwd, require global jest command exists
+command! JestInit :call CocAction('runCommand', 'jest.init')
+
+" go-plug-COC
+nnoremap <leader><leader> :CocList<CR>
+nmap gd <Plug>(coc-definition)
+nmap gr <Plug>(coc-references)
+nmap gen <Plug>(coc-diagnostic-next-error)
+nmap gep <Plug>(coc-diagnostic-prev-error)
+nmap gwn <Plug>(coc-diagnostic-next)
+nmap gwp <Plug>(coc-diagnostic-prev)
+" use <c-space>for trigger completion
+inoremap <silent><expr> <c-space> coc#refresh()
+inoremap <silent><expr> <c-n> coc#refresh()
+inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+inoremap <silent><expr> <CR>
+      \ pumvisible() ? coc#_select_confirm() :
+      \ "\<CR>"
+" use <c-space>for trigger completion
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? coc#_select_confirm() :
+      \ coc#expandableOrJumpable() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+
+" go-plug-LIGHTLINE
+command! LightlineReload call LightlineReload()
+
+function! LightlineReload()
+  call lightline#init()
+  call lightline#colorscheme()
+  call lightline#update()
+endfunction
+
+function! LightlineGitBlame() abort
+  let blame = get(b:, 'coc_git_blame', '')
+  return blame
+endfunction
+
+function! LightlineStatuslineTabs() abort
+  return MyTabLine()
+endfunction
+
+function! MyLightLinePercent()
+  if &ft !=? 'nerdtree'
+    return line('.') * 100 / line('$') . '%'
+  else
+    return ''
+  endif
+endfunction
+function! MyLightLineLineInfo()
+  if &ft !=? 'nerdtree'
+    return line('.').':'. col('.')
+  else
+    return ''
+  endif
+endfunction
+
+function! s:lightline_coc_diagnostic(kind, sign, pre) abort
+  let info = get(b:, 'coc_diagnostic_info', 0)
+  if empty(info) || get(info, a:kind, 0) == 0
+    return ''
+  endif
+  try
+    let s = g:coc_user_config['diagnostic'][a:sign . 'Sign']
+  catch
+    let s = ''
+  endtry
+  return printf('%s%s %d', a:pre, s, info[a:kind])
+endfunction
+
+function! LightlineCocErrors() abort
+  return s:lightline_coc_diagnostic('error', 'error', 'e:')
+endfunction
+
+function! LightlineCocWarnings() abort
+  return s:lightline_coc_diagnostic('warning', 'warning', 'w:')
+endfunction
+
+function! LightlineCocInfos() abort
+  return s:lightline_coc_diagnostic('information', 'info', 'i:')
+endfunction
+
+function! LightlineCocHints() abort
+  return s:lightline_coc_diagnostic('hints', 'hint', 'h:')
+endfunction
+\ }
+
+let g:lightline = {
+  \ 'colorscheme': 'molokai',
+  \ 'active': {
+  \   'left': [
+  \     [ 'mode', 'paste', 'statuslinetabs' ],
+  \     [ 'cocstatus', 'coc_error', 'coc_warning', 'coc_info' ]
+  \   ],
+  \   'right':[
+  \     [ 'percent' ],
+  \     [ 'blame', 'gitbranch' ]
+  \   ],
+  \ },
+  \ 'mode_map': {
+  \ 'n' : 'THINKING',
+  \ 'i' : 'WRITING',
+  \ 'R' : 'REWRITE',
+  \ 'v' : 'SELECT',
+  \ 'V' : 'SELECT LINES',
+  \ "\<C-v>": 'SELECT CHARACTERS',
+  \ 'c' : 'C',
+  \ 's' : 'S',
+  \ 'S' : 'SL',
+  \ "\<C-s>": 'SB',
+  \ 't': 'T',
+  \ },
+  \ 'separator': { 'left': '', 'right': '' },
+  \ 'subseparator': { 'left': '', 'right': '' },
+  \ 'inactive': {
+  \   'left': [],
+  \   'right': []
+  \ },
+  \ 'tabline': {
+  \   'left': [],
+  \   'right': []
+  \ },
+  \ 'component_function': {
+  \   'blame': 'LightlineGitBlame',
+  \   'gitbranch': 'fugitive#head',
+  \   'percent': 'MyLightLinePercent',
+  \   'lineinfo': 'MyLightLineLineInfo'
+  \ },
+  \ 'component_expand': {
+  \   'statuslinetabs': 'LightlineStatuslineTabs',
+  \   'coc_error'     : 'LightlineCocErrors',
+  \   'coc_warning'   : 'LightlineCocWarnings',
+  \   'coc_info'      : 'LightlineCocInfos',
+  \   'coc_hint'      : 'LightlineCocHints',
+  \   'coc_fix'       : 'LightlineCocFixes'
+  \ },
+\ }
+
+let g:lightline.component_type = {
+\   'coc_error'        : 'error',
+\   'coc_warning'      : 'warning',
+\   'coc_info'         : 'tabsel',
+\   'coc_hint'         : 'middle',
+\   'coc_fix'          : 'middle',
+\ }
+
+autocmd User CocDiagnosticChange call lightline#update()
 
 " go-plug-TAB-BAR
 set tabline=%!MyTabLine()
 function! MyTabLine()
   let s = ''
-  for i in range(tabpagenr('$'))
     " select the highlighting
+    for i in range(tabpagenr('$'))
     if i + 1 == tabpagenr()
       let s .= '%#TabLineSel# '
     else
@@ -421,13 +613,14 @@ function! MyTabLine()
     let s .= '%' . (i + 1) . 'T'
     " the label is made by MyTabLabel()
     let cwd = expand('%:p:h')
-    let tabLabel = '' . (i + 1) . ':%{MyTabLabel(' . (i + 1) . ')}'
-    let tabFile = '%{MyTabPath(' . (i + 1) . ')}'
+    let tabFile = '%{MyTabFile(' . (i + 1) . ')}'
+    let tabDir = '%{MyTabDir(' . (i + 1) . ')}'
+    " let tabFile = '%{MyTabPath(' . (i + 1) . ')}'
     let tabPath = MyTabPath(i + 1)
     if i + 1 == tabpagenr()
-      let s .= '%#TabLineSelPointer#' .  WebDevIconsGetFileTypeSymbol(tabPath) .  '%#TabLineSel# ' . tabLabel
+      let s .= '%#TabLineSel#' .  WebDevIconsGetFileTypeSymbol(tabPath) . ' %#TabLineDirSel#' . tabDir . ' › ' .  '%#TabLineFileSel#' . tabFile
     else
-      let s .= ''.  WebDevIconsGetFileTypeSymbol(tabPath) . ' ' . tabLabel
+      let s .= ''.  WebDevIconsGetFileTypeSymbol(tabPath) . ' %#TabLineDir#' . tabDir . ' › ' . '%#TabLineFile#' . tabFile
     endif
     if i + 1 == tabpagenr()
       " let s .= '(っ˘̩ᴗ˘̩)っ ﹒︠ᴗ﹒︡ ⌨  '
@@ -447,112 +640,46 @@ function! MyTabPath(n)
   let filename = fnamemodify(label, ':p')
   return filename
 endfunction
-function! MyTabLabel(n)
+function! MyTabDir(n)
+  ":p expand to full path
+  ":h head (last path component removed)
+  ":t tail (last path component only)
+  ":r root (one extension removed)
+  ":e extension only
   let buflist = tabpagebuflist(a:n)
   let winnr = tabpagewinnr(a:n)
   let label = bufname(buflist[winnr - 1])
-  let filename = fnamemodify(label, ':t')
+  let filename = fnamemodify(label, ':t:r')
+  let filenamePath = fnamemodify(label, ':h:t')
+  let shortPath = pathshorten(fnamemodify(label, ':h'))
+  let shortPathOneFolder = fnamemodify(shortPath, ':h:t')
+  return '' . shortPathOneFolder[1:] . '' . filenamePath
+endfunction
+function! MyTabFile(n)
+  ":p expand to full path
+  ":h head (last path component removed)
+  ":t tail (last path component only)
+  ":r root (one extension removed)
+  ":e extension only
+  let buflist = tabpagebuflist(a:n)
+  let winnr = tabpagewinnr(a:n)
+  let label = bufname(buflist[winnr - 1])
+  let filename = fnamemodify(label, ':t:r')
   return filename
 endfunction
 
-" go-plug-GoFile!
-set path=.,src
-set suffixesadd=.js,.jsx
-
-function! LoadMainNodeModule(fname)
-    let nodeModules = './node_modules/'
-    let packageJsonPath = nodeModules . a:fname . '/package.json'
-
-    if filereadable(packageJsonPath)
-        return nodeModules . a:fname . '/' . json_decode(join(readfile(packageJsonPath))).main
-    else
-        return nodeModules . a:fname
-    endif
-endfunction
-
-set includeexpr=LoadMainNodeModule(v:fname)
-
-" go-plug-EasyMotion
-let g:EasyMotion_do_mapping = 0
-let g:EasyMotion_smartcase = 1
-let g:EasyMotion_use_smartsign_us = 1
-let g:EasyMotion_startofline = 0
-map  ff <Plug>(easymotion-s2)
-map  fh <Plug>(easymotion-linebackward)
-map  fj <Plug>(easymotion-j)
-map  fk <Plug>(easymotion-k)
-map  fl <Plug>(easymotion-lineforward)
-
-" go-plug-MOVE
-let g:move_map_keys = 0
-vmap <C-j> <Plug>MoveBlockDown
-vmap <C-k> <Plug>MoveBlockUp
-vmap <C-h> <Plug>MoveBlockLeft
-vmap <C-l> <Plug>MoveBlockRight
-
-" go-plug-ALE
-" set statusline+=%#warningmsg#
-" set statusline+=%{SyntasticStatuslineFlag()}
-" set statusline+=%*
-" let g:syntastic_always_populate_loc_list = 1
-" let g:syntastic_loc_list_height = 5
-" let g:syntastic_auto_loc_list = 0
-" let g:syntastic_check_on_open = 0
-" let g:syntastic_check_on_wq = 1
-" let g:syntastic_javascript_checkers = ['eslint']
-" let g:syntastic_error_symbol = '⚠️'
-" let g:syntastic_style_error_symbol = '⚠️'
-" let g:syntastic_warning_symbol = '⚠️'
-" let g:syntastic_style_warning_symbol = '💩'
-" highlight link SyntasticErrorSign SignColumn
-" highlight link SyntasticWarningSign SignColumn
-" highlight link SyntasticStyleErrorSign SignColumn
-" highlight link SyntasticStyleWarningSign SignColumn
-nmap <silent> [c <Plug>(ale_previous_wrap)
-nmap <silent> ]c <Plug>(ale_next_wrap)
-" let g:ale_sign_error = '❌'
-let g:ale_sign_error = '💩'
-let g:ale_sign_warning = '🎭'
-
-" go-plug-COMPILE
-" Compile code based on file type
-function! CompileCode()
-  if (&ft == 'python')
-    execute '!/usr/bin/python %'
-  endif
-  if (&ft == 'javascript')
-    execute '!/usr/bin/node %'
-  endif
-endfunction
-
-" go-plug-AIRLINE
-let g:airline_powerline_fonts = 0
-let g:airline_left_sep = ' * '
-let g:airline_right_sep = ' * '
-" let g:airline_section_z = '%{strftime("%h %d %H:%M")}'
-" let g:airline_section_c = '♕  High Tech | Low Life ♙ '
-let g:airline_section_c = ''
-" let g:airline_section_x = ''
-" let g:airline_section_y = ''
-" let g:airline_section_z = '♕ l%l'
-let g:airline_section_z = '%l'
-
-" go-plug-POSTGRES
-let g:sql_type_default = 'pgsql'
-
 " go-plug-JAVASCRIPT
 let g:javascript_plugin_jsdoc = 1
-let g:javascript_plugin_flow = 1
-let g:used_javascript_libs = 'vue'
 
 " go-plug-GIT
-" let g:gitgutter_sign_column_always = 1
 set signcolumn=yes
 let g:gitgutter_override_sign_column_highlight = 0
 set updatetime=300
 
 " go-plug-MARKDOWN
 let g:vim_markdown_folding_disabled = 1
+set conceallevel=0
+let g:markdown_fenced_languages = ['css', 'javascript', 'js=javascript', 'json=javascript']
 
 " go-plug-RG
 " --column: Show column number
@@ -572,160 +699,65 @@ nnoremap <expr> k (&buftype is# "quickfix" ? "<C-p>" : "k")
 nnoremap <expr> o (&buftype is# "quickfix" ? "<CR>" : "o")
 let g:rg_derive_root = 1
 
+let g:netrw_list_hide = &wildignore
+
 " go-plug-FZF
+let g:fzf_layout = { 'down': '100%' }
 set rtp+=~/.fzf
-" let g:fzf_layout = { 'window': 'enew' }
-let $FZF_DEFAULT_COMMAND = 'rg --smart-case -g "!node_modules/" -l ""'
-command! -bang -nargs=* Rg
-      \ call fzf#vim#grep(
-      \   'rg --smart-case --column --line-number --no-heading --color=always -g "!node_modules/" '.shellescape(<q-args>), 1,
-      \   <bang>0 ? fzf#vim#with_preview('down:70%')
-      \           : fzf#vim#with_preview('right:30%:hidden', '?'),
-      \   <bang>0)
 
-" Files + devicons
-function! Fzf_open(arg)
-  let option = a:arg
-  let l:fzf_files_options =
-        \ '--preview "echo {} | tr -s \" \" \"\n\" | tail -1 | xargs rougify | head -'.&lines.'"'
-
-  function! s:files(option)
-    let l:fzfCommand = $FZF_DEFAULT_COMMAND
-    if (a:option == 'git')
-      let l:fzfCommand = 'git ls-files --exclude-standard --others --modified'
-    else
-      let l:fzfCommand = $FZF_DEFAULT_COMMAND
-    endif
-    let l:files = split(system(l:fzfCommand), '\n')
-    return s:prepend_icon(l:files)
-  endfunction
-
-  function! s:prepend_icon(candidates)
-    let l:result = []
-    for l:candidate in a:candidates
-      let l:filename = fnamemodify(l:candidate, ':p:t')
-      let l:icon = WebDevIconsGetFileTypeSymbol(l:filename, isdirectory(l:filename))
-      call add(l:result, printf('%s %s', l:icon, l:candidate))
-    endfor
-
-    return l:result
-  endfunction
-
-  function! s:edit_file(item)
-    let l:parts = split(a:item, ' ')
-    let l:file_path = get(l:parts, 1, '')
-    execute 'silent e' l:file_path
-  endfunction
-
-  call fzf#run({
-        \ 'source': <sid>files(option),
-        \ 'sink':   function('s:edit_file'),
-        \ 'options': '-m ' . l:fzf_files_options,
-        \ 'down':    '70%' })
+command! -bang -nargs=? -complete=dir Files
+    \ call fzf#vim#files(<q-args>, fzf#vim#with_preview(), <bang>0)
+function! RipgrepFzf(query, fullscreen)
+  let command_fmt = 'rg --column --line-number --no-heading --color=always --smart-case %s || true'
+  let initial_command = printf(command_fmt, shellescape(a:query))
+  let reload_command = printf(command_fmt, '{q}')
+  let spec = {'options': ['--phony', '--query', a:query, '--bind', 'change:reload:'.reload_command]}
+  call fzf#vim#grep(initial_command, 1, fzf#vim#with_preview(spec), a:fullscreen)
 endfunction
+map <leader>o :Files<CR>
+map <leader>gg :GF?<CR>
+command! -nargs=* -bang Rg call RipgrepFzf(<q-args>, <bang>0)
 
-" go-plug-NERDTREE
-let g:nerdtree_tabs_open_on_console_startup = 1
-let g:nerdtree_tabs_focus_on_files = 1
-let g:nerdtree_tabs_autofind = 1
-let g:NERDTreeUpdateOnCursorHold = 1
-let g:NERDTreeGitStatusWithFlags = 1
-let g:NERDTreeGitStatusNodeColorization = 1
-highlight link NERDTreeDir Question
-highlight link NERDTreeGitStatusIgnored Comment
-highlight link NERDTreeGitStatusModified cssURL
-" let g:NERDTreeDirArrowExpandable = '+'
-" let g:NERDTreeDirArrowCollapsible = '-'
-let g:NERDTreeDirArrowExpandable = nr2char(8200)
-let g:NERDTreeDirArrowCollapsible = nr2char(8200)
-let NERDTreeQuitOnOpen = 1
-let NERDTreeMinimalUI = 1
-let NERDTreeShowHidden = 1
-let NERDTreeIgnore = ['\.DS_Store$', '\.git$', 'node_modules$']
-"if you show hidden characters, this hides them in NERDTree
-autocmd FileType nerdtree setlocal nolist
-let g:NERDTreeIndicatorMapCustom = {
-      \ "Modified"  : "*",
-      \ "Staged"    : "+",
-      \ "Untracked" : "?",
-      \ "Renamed"   : "_",
-      \ "Unmerged"  : "═",
-      \ "Deleted"   : "-",
-      \ "Dirty"     : "~",
-      \ "Clean"     : "✓",
-      \ 'Ignored'   : '✗',
-      \ "Unknown"   : "?"
-      \ }
-nmap <leader>j :NERDTreeTabsFind<CR>
-nmap <leader>n :NERDTreeTabsToggle<CR>
-let NERDTreeMapJumpNextSibling = '\t'
-let NERDTreeMapJumpPrevSibling = '\t'
-let NERDTreeMapToggleFilters = '\t'
-let g:NERDTreeWinSize=30
-let g:NERDTreeHighlightCursorline = 1
-let g:NERDTreeNaturalSort = 1
-let g:NERDTreeCaseSensitiveSort = 1
-let g:NERDTreeChDirMode = 2
-let g:NERDTreeCascadeOpenSingleChildDir = 0
-let g:NERDTreeCascadeSingleChildDir = 0
-let g:NERDTreeAutoDeleteBuffer = 1
+augroup _fzf
+  autocmd!
+augroup END
+
+" go-plug-NERD
+nmap <leader>, :NERDTreeToggle<CR>uCD<C-w>p
+nmap <leader>n :NERDTreeFocus<CR>uCD<C-w>p
+let NERDTreeDirArrowExpandable="\u00a0"
+let NERDTreeDirArrowCollapsible="\u00a0"
+let NERDTreeNodeDelimiter="\u00b7"
+let NERDTreeAutoCenter=0
+let NERDTreeAutoDeleteBuffer = 1
+let NERDTreeMinimalUI=1
+let NERDTreeWinSize=24
+" Check if NERDTree is open or active
+function! IsNERDTreeOpen()
+  return exists("t:NERDTreeBufName") && (bufwinnr(t:NERDTreeBufName) != -1)
+endfunction
+" Call NERDTreeFind iff NERDTree is active, current window contains a modifiable
+" file, and we're not in vimdiff
+function! SyncTree()
+  if &modifiable && IsNERDTreeOpen() && strlen(expand('%')) > 0 && !&diff
+    NERDTreeFind
+    execute "normal! zb"
+    wincmd p
+  endif
+endfunction
+" Highlight currently open buffer in NERDTree
+augroup NERD
+  au!
+  autocmd VimEnter * NERDTree
+  autocmd VimEnter * wincmd p
+  autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+  autocmd BufEnter * call SyncTree()
+  autocmd BufWinEnter * NERDTreeMirror
+augroup END
 
 " go-plug-DEVICONS
-let g:webdevicons_enable_nerdtree = 1
-let g:WebDevIconsNerdTreeAfterGlyphPadding = ' '
 let g:WebDevIconsUnicodeDecorateFolderNodes = 1
 let g:DevIconsEnableFoldersOpenClose = 1
-let g:WebDevIconsUnicodeDecorateFileNodesPatternSymbols = {} " needed
-let g:WebDevIconsUnicodeDecorateFileNodesPatternSymbols['.*css\.js$'] = ''
-
-" go-plug-TODO
-let g:simple_todo_tick_symbol = '✓'
-let g:simple_todo_map_keys = 0
-" nmap <leader>i <Plug>(simple-todo-new-start-of-line)
-nmap <leader>x <Plug>(simple-todo-mark-switch)
-
-" go-plug-BOOKMARK
-let g:bookmark_highlight_lines = 1
-let g:bookmark_sign = '♞'
-
-" go-plug-WRITING
-augroup lexical
-  autocmd!
-  autocmd FileType textile call lexical#init()
-  autocmd FileType text call lexical#init({ 'spell': 0 })
-augroup END
-let g:lexical#spell = 1
-" augroup pencil
-"     autocmd!
-"     autocmd FileType markdown,mkd call pencil#init()
-"                 \ | call lexical#init()
-"                 \ | call litecorrect#init()
-"                 \ | call textobj#quote#init()
-"                 \ | call textobj#sentence#init()
-" augroup END
-autocmd! User GoyoEnter Limelight
-autocmd! User GoyoLeave Limelight!
-let g:limelight_conceal_ctermfg = 240
-let g:limelight_conceal_guifg = '#777777'
-
-" GOYO Mode
-function! ProseMode()
-  call goyo#execute(0, [])
-  set spell noci nosi noai nolist noshowmode noshowcmd
-  set complete+=s
-  :NERDTreeTabsToggle<CR>
-  " set bg=light
-  " if !has('gui_running')
-  "     let g:solarized_termcolors=256
-  " endif
-  " colors solarized
-endfunction
-command! ProseMode call ProseMode()
-nmap \p :ProseMode<CR>
-
-" go-plug-PDF
-:command! -complete=file -nargs=1 Rpdf :r !pdftotext -nopgbrk <q-args> -
-:command! -complete=file -nargs=1 Rpdf :r !pdftotext -nopgbrk <q-args> - |fmt -csw78
 
 " go-plug-ZOOM
 " Zoom / Restore window.
@@ -743,9 +775,21 @@ endfunction
 command! ZoomToggle call s:ZoomToggle()
 nnoremap <leader>z :ZoomToggle<CR>
 
-" Macros
-let @c = "oconsole.error('\<Esc>a"
-let @f = "oconst @@@ = (\<Esc>A => {\<Enter>\<Esc>O"
-nnoremap mm f@ct<space>
+" go-plug-TAGBAR
+let g:tagbar_type_elm = {
+      \ 'kinds' : [
+      \ 'f:function:0:0',
+      \ 'm:modules:0:0',
+      \ 'i:imports:1:0',
+      \ 't:types:1:0',
+      \ 'a:type aliases:0:0',
+      \ 'c:type constructors:0:0',
+      \ 'p:ports:0:0',
+      \ 's:functions:0:0',
+      \ ]
+      \}
+
+" MACROS
+let @c="oconsole.error('#DEBUG#');\<Esc>hhi"
 
 call SetTheme(myTheme)
