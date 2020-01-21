@@ -1,0 +1,8 @@
+.config/nvim/plugins
+.config/.mono/
+.config/NuGet/
+.config/configstore/
+.config/nvim/.netrwhist
+.config/nvim/autoload/
+.config/xbuild/
+.DS_STORE

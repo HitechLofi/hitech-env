@@ -3,31 +3,14 @@ let myTheme = 'dark'
 " ~~~~~~~~~~~~~~~~~~~
 "       INDEX
 " ~~~~~~~~~~~~~~~~~~~
-" go-PLUGINS
-" go-THEMES
-" go-KEYMAPS
-" go-SETTINGS
-" go-STATUS-LINE-COLORS
-" go-PLUGIN-SETTINGS
-"   > go-plug-TAB-BAR
-"   > go-plug-EASYMOTION
-"   > go-plug-MOVE
-"   > go-plug-COMPILE
-"   > go-plug-POSTGRES
-"   > go-plug-JAVASCRIPT
-"   > go-plug-GIT
-"   > go-plug-MARKDOWN
-"   > go-plug-RG
-"   > go-plug-FZF
-"   > go-plug-DEVICONS
-"   > go-plug-TODO
-"   > go-plug-BOOKMARK
-"   > go-plug-WRITING
-"   > go-plug-PDF
-"   > go-plug-ZOOM
+" PLUGINS
+" THEMES
+" KEYMAPS
+" SETTINGS
+" PLUGIN-SETTINGS
 
 " ================================================================================ "
-"                                    go-PLUGINS                                    "
+"                                    ***PLUGINS                                    "
 " ================================================================================ "
 if has('nvim')
   call plug#begin('~/.config/nvim/plugins')
@@ -53,6 +36,10 @@ if has('nvim')
   Plug 'janko-m/vim-test'
 
   Plug 'mbbill/undotree'
+  Plug 'chaoren/vim-wordmotion'
+
+  Plug 'voldikss/vim-floaterm'
+  Plug 'voldikss/vim-translator'
 
   " Directory browser
   Plug 'scrooloose/nerdtree'
@@ -76,7 +63,7 @@ if has('nvim')
 endif
 
 " ================================================================================ "
-"                                     go-THEMES                                    "
+"                                     ***THEMES                                    "
 " ================================================================================ "
 function! SetTheme(theme)
   if a:theme == 'dark'
@@ -170,10 +157,14 @@ function! CustomizeTheme(theme)
   hi link EasyMotionTarget2Second EasyMotionTarget
   hi link EasyMotionShade Comment
   hi link EasyMotionMoveHL Search
+  hi Pmenu guibg=#171d29 guifg=#cad1e0
+  hi PmenuSel guifg=#ffffff guibg=#ff0ae7
+  hi PmenuSbar guibg=#d819e6
+  hi PmenuThumb guibg=#444444
 endfunction
 
 " ================================================================================ "
-"                                      go-KEYMAPS                                  "
+"                                      ***KEYMAPS                                  "
 " ================================================================================ "
 nnoremap <space> <Nop>
 let mapleader = " "
@@ -198,14 +189,13 @@ nnoremap [[ :cp<CR>
 nnoremap 0 ^
 nnoremap ^ 0
 nnoremap - $
-nnoremap <leader>o :call Fzf_open('')<CR>
 nnoremap <leader>gg :call Fzf_open('git')<CR>
 nnoremap <leader><leader> :checktime<CR>:syntax sync fromstart<CR>
 nnoremap zm zz
 nnoremap zz zt4k4j
 nnoremap zb zb4j4k
-nnoremap <C-d> 4jzt
-nnoremap <C-u> 4kzb
+nnoremap <C-d> 4j
+nnoremap <C-u> 4k
 nnoremap y "*y
 nnoremap Y y$
 nnoremap gb <C-^>
@@ -213,15 +203,19 @@ nnoremap gf <C-w>gf
 nnoremap <C-w>gf gf
 nnoremap <C-i> <C-o>
 nnoremap <C-o> <C-i>
-nmap <leader>i :echo expand('%:p:h') . "/"<CR>
+" nmap <leader>i :echo expand('%:p:h') . "/"<CR>
 nnoremap <leader>k :noh<return><esc>
-nnoremap <leader>p :vsp $MYVIMRC<CR>
-nnoremap <leader>v :source $MYVIMRC<CR>:LightlineReload<CR>
+nnoremap <leader>p :e $MYVIMRC<CR>
+nnoremap <leader>v :Lines***<CR>
+" nnoremap <leader>v :source $MYVIMRC<CR>:LightlineReload<CR>
+" nnoremap <leader>v :source $MYVIMRC<CR>:LightlineReload<CR>
 nnoremap <leader>q :q<CR>
 nnoremap <leader>s :w<CR>
 nnoremap <leader>t :tabnew<CR>
 nnoremap <leader>e :edit /<left>
-nnoremap <leader>r :%s///g<left><left>
+nnoremap <leader>r :%s///g<left><left><left>
+nnoremap <leader>c :lcd %:p:h<CR>
+vnoremap <C-r> "hy:%s/<C-r>h//gc<left><left><left>
 " nnoremap <leader>n :tabn<CR>
 
 " Git
@@ -229,7 +223,8 @@ nnoremap <leader>gd :Gdiff<CR>
 nmap gp <Plug>(coc-git-prevchunk)
 nmap gn <Plug>(coc-git-nextchunk)
 nmap <leader>gs <Plug>(coc-git-chunkinfo)
-nmap <leader>gc <Plug>(coc-git-commit)
+nmap <leader>gi <Plug>(coc-git-commit)
+nnoremap <leader>gc :BCommits<CR>
 nnoremap <silent> <leader>gf :CocCommand git.foldUnchanged<CR>
 nnoremap <silent> <leader>gu :CocCommand git.chunkUndo<CR>
 
@@ -237,6 +232,7 @@ nnoremap <leader>f :Rg<space>
 vnoremap <leader>f y:Rg<space><C-r>0<CR>
 nnoremap <leader>* viwy:Rg<space><C-r>0<CR>
 nnoremap * *N
+nnoremap <leader>b :Windows<CR>
 nnoremap <leader>t :tabnew<CR>
 nnoremap <leader>1 :tabn1<CR>
 nnoremap <leader>2 :tabn2<CR>
@@ -250,6 +246,7 @@ nnoremap <leader>9 :tabn9<CR>
 
 " Terminal
 tnoremap <Esc> <C-\><C-n>
+set t_Co=256
 
 " Delete and cut and paste FIXED :D
 nnoremap p p`[v`]=<C-o>
@@ -285,7 +282,7 @@ endif
 xnoremap <expr> p 'pgv"'.v:register.'y`>'
 
 " ================================================================================ "
-"                                    go-SETTINGS                                   "
+"                                    ***SETTINGS                                   "
 " ================================================================================ "
 if has("autocmd")
   autocmd ColorScheme * call SetTheme(myTheme)
@@ -294,15 +291,18 @@ if has("autocmd")
   autocmd BufNewFile,BufRead *.tsx,*.jsx set filetype=typescript.tsx
   autocmd BufRead /tmp/psql.edit.* set syntax=sql
   autocmd BufEnter * :syntax sync fromstart
-  " autocmd BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$")
-  "       \| exe "normal! g'\"" | endif
-  " au BufWinLeave *.elm mkview
-  " au BufWinEnter *.elm silent loadview
+  autocmd BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$")
+        \| exe "normal! g'\"" | endif
+  autocmd FileType elm setlocal tabstop=4 shiftwidth=4 softtabstop=4
+  autocmd FileType fzf tnoremap <buffer> <esc> <c-c>
 endif
 syntax enable       " enable syntax processing
 filetype plugin on
 set tags=./tags;
 set noautochdir
+set splitbelow
+set splitright
+set t_ut= "disable the Background Color Erase that messes with some color schemes
 set autoread
 set autowriteall
 set ignorecase
@@ -320,8 +320,8 @@ set whichwrap=b,s,<,>,h,l,[,]
 set backspace+=indent,eol,start
 set tabstop=2       " number of visual spaces per TAB
 set softtabstop=2   " number of spaces in tab when editing
-set expandtab       " tabs are spaces
 set shiftwidth=2
+set expandtab       " tabs are spaces
 set smartindent
 set autoindent
 set breakindent
@@ -351,35 +351,17 @@ let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
 let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
 
 " ================================================================================ "
-"                             go-STATUS-LINE-COLORS                                "
+"                                ***PLUGIN-SETTINGS                                "
 " ================================================================================ "
-function! InsertStatuslineColor(mode)
-  if a:mode == 'i'
-    hi StatusLine guibg=NONE guifg=white cterm=NONE
-  else
-    hi StatusLine guibg=NONE guifg=#bbbbff cterm=NONE
-  endif
-endfunction
-function! InsertLeaveActions()
-  hi StatusLine guibg=NONE guifg=#bbbbff cterm=NONE
-endfunction
-au InsertEnter * call InsertStatuslineColor(v:insertmode)
-au InsertLeave * call InsertLeaveActions()
-" to handle exiting insert mode via a control-C
-inoremap <c-c> <c-o>:call InsertLeaveActions()<cr><c-c>
-
-" ================================================================================ "
-"                                go-PLUGIN-SETTINGS                                "
-" ================================================================================ "
-" go-plug-LINENUM
+" *** plugin linenum
 let g:line_number_interval#enable_at_startup = 1
 let g:line_number_interval = 5
 
-" go-plug-SYNTAX
+" *** plugin syntax
 syntax match devComment "\v.*$"
 highlight link devComment Comment
 
-" go-plug-INCSEARCH
+" *** plugin incsearch
 function! s:config_easyfuzzymotion(...) abort
   return extend(copy({
   \   'converters': [incsearch#config#fuzzyword#converter()],
@@ -394,7 +376,7 @@ noremap <silent><expr> <Space>/ incsearch#go(<SID>config_easyfuzzymotion())
 nmap <leader>/ <Plug>(incsearch-fuzzy-/)
 nmap <leader>? <Plug>(incsearch-fuzzy-?)
 
-" go-plug-MOVE
+" *** plugin move
 let g:move_map_keys = 0
 nmap J V<Plug>MoveBlockDown<Esc>
 nmap K V<Plug>MoveBlockUp<Esc>
@@ -405,7 +387,7 @@ nnoremap L V>gv<Esc>
 vnoremap H <gv
 vnoremap L >gv
 
-" go-plug-Javascript
+" *** plugin javascript
 set path=.,src
 set suffixesadd=.js,.jsx
 
@@ -432,7 +414,7 @@ function! LoadMainNodeModule(fname)
 endfunction
 set includeexpr=LoadMainNodeModule(v:fname)
 
-" go-plut-TEST
+" *** plugin test
 let test#javascript#jest#executable = 'CI=true npm test --colors'
 " make test commands execute using dispatch.vim
 let test#strategy = "neovim"
@@ -442,13 +424,12 @@ command! -nargs=0 Jest :call  CocAction('runCommand', 'jest.projectTest')
 " Run jest for current file
 command! -nargs=0 JestCurrent :call  CocAction('runCommand', 'jest.fileTest', ['%'])
 " Run jest for current test
-nnoremap <leader>r :call CocAction('runCommand', 'jest.singleTest')<CR>
-nnoremap <leader>c :BCommits<CR>
+" nnoremap <leader>r :call CocAction('runCommand', 'jest.singleTest')<CR>
 " Init jest in current cwd, require global jest command exists
 command! JestInit :call CocAction('runCommand', 'jest.init')
 
-" go-plug-COC
-nnoremap <leader><leader> :CocList<CR>
+" *** plugin coc
+" nnoremap <leader><leader> :CocList<CR>
 nmap gd <Plug>(coc-definition)
 nmap gr <Plug>(coc-references)
 nmap gen <Plug>(coc-diagnostic-next-error)
@@ -474,7 +455,7 @@ function! s:check_back_space() abort
   return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
 
-" go-plug-LIGHTLINE
+" *** plugin lightline
 command! LightlineReload call LightlineReload()
 
 function! LightlineReload()
@@ -492,16 +473,9 @@ function! LightlineStatuslineTabs() abort
   return MyTabLine()
 endfunction
 
-function! MyLightLinePercent()
-  if &ft !=? 'nerdtree'
-    return line('.') * 100 / line('$') . '%'
-  else
-    return ''
-  endif
-endfunction
 function! MyLightLineLineInfo()
   if &ft !=? 'nerdtree'
-    return line('.').':'. col('.')
+    return line('.')
   else
     return ''
   endif
@@ -521,42 +495,45 @@ function! s:lightline_coc_diagnostic(kind, sign, pre) abort
 endfunction
 
 function! LightlineCocErrors() abort
-  return s:lightline_coc_diagnostic('error', 'error', 'e:')
+  return s:lightline_coc_diagnostic('error', 'error', '⛔️')
 endfunction
 
 function! LightlineCocWarnings() abort
-  return s:lightline_coc_diagnostic('warning', 'warning', 'w:')
+  return s:lightline_coc_diagnostic('warning', 'warning', '⚠️ ')
 endfunction
 
 function! LightlineCocInfos() abort
-  return s:lightline_coc_diagnostic('information', 'info', 'i:')
+  return s:lightline_coc_diagnostic('information', 'info', 'ℹ️ ')
 endfunction
 
 function! LightlineCocHints() abort
-  return s:lightline_coc_diagnostic('hints', 'hint', 'h:')
+  return s:lightline_coc_diagnostic('hints', 'hint', '❕')
 endfunction
-\ }
+
+function! LightlineCocFixes() abort
+  return s:lightline_coc_diagnostic('fixes', 'fix', '❕')
+endfunction
 
 let g:lightline = {
   \ 'colorscheme': 'molokai',
   \ 'active': {
   \   'left': [
   \     [ 'mode', 'paste', 'statuslinetabs' ],
-  \     [ 'cocstatus', 'coc_error', 'coc_warning', 'coc_info' ]
+  \     [ 'coc_error', 'coc_warning', 'coc_info', 'coc_hint', 'coc_fix' ]
   \   ],
   \   'right':[
-  \     [ 'percent' ],
+  \     [ 'lineinfo' ],
   \     [ 'blame', 'gitbranch' ]
   \   ],
   \ },
   \ 'mode_map': {
-  \ 'n' : 'THINKING',
-  \ 'i' : 'WRITING',
-  \ 'R' : 'REWRITE',
-  \ 'v' : 'SELECT',
-  \ 'V' : 'SELECT LINES',
-  \ "\<C-v>": 'SELECT CHARACTERS',
-  \ 'c' : 'C',
+  \ 'n' : '(⊃⌐■_■)⊃',
+  \ 'i' : ' _〆(￣ー￣)',
+  \ 'R' : ' ─=≡Σ((( つ＞＜)つ',
+  \ 'v' : '( ・・)⊃-二',
+  \ 'V' : '( ・・)⊃-二二',
+  \ "\<C-v>": '( ・・)つ●',
+  \ 'c' : 'v(-_-)v',
   \ 's' : 'S',
   \ 'S' : 'SL',
   \ "\<C-s>": 'SB',
@@ -575,7 +552,6 @@ let g:lightline = {
   \ 'component_function': {
   \   'blame': 'LightlineGitBlame',
   \   'gitbranch': 'fugitive#head',
-  \   'percent': 'MyLightLinePercent',
   \   'lineinfo': 'MyLightLineLineInfo'
   \ },
   \ 'component_expand': {
@@ -598,7 +574,7 @@ let g:lightline.component_type = {
 
 autocmd User CocDiagnosticChange call lightline#update()
 
-" go-plug-TAB-BAR
+" *** plugin tab bar
 set tabline=%!MyTabLine()
 function! MyTabLine()
   let s = ''
@@ -668,20 +644,20 @@ function! MyTabFile(n)
   return filename
 endfunction
 
-" go-plug-JAVASCRIPT
+" *** plugin javascript
 let g:javascript_plugin_jsdoc = 1
 
-" go-plug-GIT
+" *** plugin git
 set signcolumn=yes
 let g:gitgutter_override_sign_column_highlight = 0
 set updatetime=300
 
-" go-plug-MARKDOWN
+" *** plugin markdown
 let g:vim_markdown_folding_disabled = 1
 set conceallevel=0
 let g:markdown_fenced_languages = ['css', 'javascript', 'js=javascript', 'json=javascript']
 
-" go-plug-RG
+" *** plugin rg
 " --column: Show column number
 " --line-number: Show line number
 " --no-heading: Do not show file headings in results
@@ -701,8 +677,31 @@ let g:rg_derive_root = 1
 
 let g:netrw_list_hide = &wildignore
 
-" go-plug-FZF
-let g:fzf_layout = { 'down': '100%' }
+" *** plugin fzf
+function! CreateCenteredFloatingWindow()
+    let width = min([&columns - 4, max([80, &columns - 20])])
+    let height = min([&lines - 4, max([20, &lines - 10])])
+    let top = ((&lines - height) / 2) - 1
+    let left = (&columns - width) / 2
+    let opts = {'relative': 'editor', 'row': top, 'col': left, 'width': width, 'height': height, 'style': 'minimal'}
+
+    let top = "╭" . repeat("─", width - 2) . "╮"
+    let mid = "│" . repeat(" ", width - 2) . "│"
+    let bot = "╰" . repeat("─", width - 2) . "╯"
+    let lines = [top] + repeat([mid], height - 2) + [bot]
+    let s:buf = nvim_create_buf(v:false, v:true)
+    call nvim_buf_set_lines(s:buf, 0, -1, v:true, lines)
+    call nvim_open_win(s:buf, v:true, opts)
+    set winhl=Normal:Floating
+    let opts.row += 1
+    let opts.height -= 2
+    let opts.col += 2
+    let opts.width -= 4
+    call nvim_open_win(nvim_create_buf(v:false, v:true), v:true, opts)
+    au BufWipeout <buffer> exe 'bw '.s:buf
+endfunction
+
+let g:fzf_layout = { 'window': 'call CreateCenteredFloatingWindow()' }
 set rtp+=~/.fzf
 
 command! -bang -nargs=? -complete=dir Files
@@ -718,23 +717,98 @@ map <leader>o :Files<CR>
 map <leader>gg :GF?<CR>
 command! -nargs=* -bang Rg call RipgrepFzf(<q-args>, <bang>0)
 
+function! s:fzf_neighboring_files_sink(line)
+  let current_file =expand("%")
+  let cwd = fnamemodify(expand("%"), ':p:h')
+  " let parts = split(a:line, '\t\zs')
+  " let excmd = matchstr(parts[2:], '^.*\ze;"\t')
+  " execute 'silent e' cwd './' a:line
+  " execute 'echom "cwd"'
+  execute 'silent e' cwd . '/' . a:line
+endfunction
+function! s:fzf_neighbouring_files()
+  let current_file =expand("%")
+  let cwd = fnamemodify(current_file, ':p:h')
+  " let command = 'ls -F -a ' . cwd
+
+  let directories = "find " . cwd . " -maxdepth 1 -mindepth 1 -type d | sed 's#.*/#./#' | sed 's#$#/#'"
+  let files = "find " . cwd . " -maxdepth 1 -mindepth 1 -type f | sed 's#.*/##'"
+  let command = files . ';' . directories  . ';' . "echo '../'"
+  call fzf#run(fzf#vim#with_preview(fzf#wrap({
+        \ 'source': command,
+        \ 'sink':   function('s:fzf_neighboring_files_sink'),
+        \ 'options': '-m -x +s',
+        \ 'window': 'call CreateCenteredFloatingWindow()' })))
+endfunction
+command! FZFNeigh call s:fzf_neighbouring_files()
+nnoremap <leader>i :FZFNeigh<CR>
+
 augroup _fzf
   autocmd!
 augroup END
 
-" go-plug-NERD
-nmap <leader>, :NERDTreeToggle<CR>uCD<C-w>p
-nmap <leader>n :NERDTreeFocus<CR>uCD<C-w>p
+" *** Floating window help
+function! HelpFloatingWindow(query) abort
+    let l:buf = CreateCenteredFloatingWindow()
+    call nvim_set_current_buf(l:buf)
+    setlocal filetype=help
+    setlocal buftype=help
+    nnoremap <buffer> <esc> :q<CR>
+    " tnoremap <buffer> <esc> <c-c>
+    execute 'help ' . a:query
+endfunction
+command! -complete=help -nargs=? Help call HelpFloatingWindow(<q-args>)
+
+" *** Terminal floating window
+
+let g:floaterm_background='black'
+let g:floaterm_border_color='blue'
+let g:floaterm_position='center'
+let g:floaterm_height=0.6
+let g:floaterm_width=0.9
+let g:floaterm_borderchars=['─', '│', '─', '│', '╭', '╮', '╯', '╰']
+nnoremap to :FloatermNew<CR>
+nnoremap tt :FloatermToggle<CR>
+nnoremap tn :FloatermNext<CR>
+nnoremap tp :FloatermPrev<CR>
+
+" *** wordmotion
+let g:wordmotion_mappings = {
+\ 'w' : 'W',
+\ 'b' : 'B',
+\ 'e' : 'E',
+\ 'ge' : 'gE',
+\ 'aw' : 'aW',
+\ 'iw' : 'iW',
+\ '<C-R><C-W>' : ''
+\ }
+
+" *** plugin nerd
+nmap <leader>, :call OpenNERDTree()<CR>
 let NERDTreeDirArrowExpandable="\u00a0"
 let NERDTreeDirArrowCollapsible="\u00a0"
 let NERDTreeNodeDelimiter="\u00b7"
 let NERDTreeAutoCenter=0
-let NERDTreeAutoDeleteBuffer = 1
+let NERDTreeAutoDeleteBuffer=1
+let NERDTreeQuitOnOpen=1
 let NERDTreeMinimalUI=1
 let NERDTreeWinSize=24
 " Check if NERDTree is open or active
 function! IsNERDTreeOpen()
   return exists("t:NERDTreeBufName") && (bufwinnr(t:NERDTreeBufName) != -1)
+endfunction
+function! OpenNERDTree()
+  if &modifiable && IsNERDTreeOpen()
+    NERDTreeToggle
+  elseif IsNERDTreeOpen()
+    NERDTreeToggle
+    " execute "normal! <C-w>p:NERDTree<CR>uCD<C-w>p:NERDTreeFind<CR>"
+  elseif strlen(expand('%')) > 0 && !&diff " new file
+    NERDTreeFind
+    execute "normal! zb"
+  else
+    NERDTreeToggle
+  endif
 endfunction
 " Call NERDTreeFind iff NERDTree is active, current window contains a modifiable
 " file, and we're not in vimdiff
@@ -745,21 +819,60 @@ function! SyncTree()
     wincmd p
   endif
 endfunction
-" Highlight currently open buffer in NERDTree
-augroup NERD
-  au!
-  autocmd VimEnter * NERDTree
-  autocmd VimEnter * wincmd p
-  autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
-  autocmd BufEnter * call SyncTree()
-  autocmd BufWinEnter * NERDTreeMirror
-augroup END
 
-" go-plug-DEVICONS
+" *** plugin devicons
 let g:WebDevIconsUnicodeDecorateFolderNodes = 1
 let g:DevIconsEnableFoldersOpenClose = 1
 
-" go-plug-ZOOM
+" *** move tabs to splits
+function MoveToPrevTab()
+  "there is only one window
+  if tabpagenr('$') == 1 && winnr('$') == 1
+    return
+  endif
+  "preparing new window
+  let l:tab_nr = tabpagenr('$')
+  let l:cur_buf = bufnr('%')
+  if tabpagenr() != 1
+    close!
+    if l:tab_nr == tabpagenr('$')
+      tabprev
+    endif
+    sp
+  else
+    close!
+    exe "0tabnew"
+  endif
+  "opening current buffer in new window
+  exe "b".l:cur_buf
+endfunc
+
+function MoveToNextTab()
+  "there is only one window
+  if tabpagenr('$') == 1 && winnr('$') == 1
+    return
+  endif
+  "preparing new window
+  let l:tab_nr = tabpagenr('$')
+  let l:cur_buf = bufnr('%')
+  if tabpagenr() < tab_nr
+    close!
+    if l:tab_nr == tabpagenr('$')
+      tabnext
+    endif
+    sp
+  else
+    close!
+    tabnew
+  endif
+  "opening current buffer in new window
+  exe "b".l:cur_buf
+endfunc
+
+nnoremap <C-w>. :call MoveToNextTab()<CR>
+nnoremap <C-w>, :call MoveToPrevTab()<CR>
+
+" *** plugin zoom
 " Zoom / Restore window.
 function! s:ZoomToggle() abort
   if exists('t:zoomed') && t:zoomed
@@ -775,7 +888,7 @@ endfunction
 command! ZoomToggle call s:ZoomToggle()
 nnoremap <leader>z :ZoomToggle<CR>
 
-" go-plug-TAGBAR
+" *** plugin tagbar
 let g:tagbar_type_elm = {
       \ 'kinds' : [
       \ 'f:function:0:0',
@@ -789,7 +902,16 @@ let g:tagbar_type_elm = {
       \ ]
       \}
 
-" MACROS
+" *** reload vim
+if !exists('*ReloadVim')
+  function ReloadVim()
+    source $MYVIMRC
+    call LightlineReload()
+  endfunction
+endif
+command! Reload :call ReloadVim()
+
+" *** macros
 let @c="oconsole.error('#DEBUG#');\<Esc>hhi"
 
 call SetTheme(myTheme)
