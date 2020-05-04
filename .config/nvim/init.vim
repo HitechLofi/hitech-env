@@ -1,4 +1,4 @@
-let myTheme = 'dark'
+let myTheme = 'light'
 
 " ~~~~~~~~~~~~~~~~~~~
 "       INDEX
@@ -10,11 +10,10 @@ let myTheme = 'dark'
 " PLUGIN-SETTINGS
 
 " ================================================================================ "
-"                                    ***PLUGINS                                    "
+"                                    MARK: PLUGINS                                    "
 " ================================================================================ "
 if has('nvim')
   call plug#begin('~/.config/nvim/plugins')
-  Plug 'ryanoasis/vim-devicons'
   Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
   Plug 'junegunn/fzf.vim'
   Plug 'tpope/vim-fugitive'
@@ -30,6 +29,7 @@ if has('nvim')
   Plug 'christoomey/vim-tmux-navigator'
   Plug 'tmux-plugins/vim-tmux-focus-events'
   Plug 'matze/vim-move'
+  Plug 'jceb/vim-orgmode'
 
   Plug 'itchyny/lightline.vim'
   Plug 'majutsushi/tagbar'
@@ -39,10 +39,12 @@ if has('nvim')
   Plug 'chaoren/vim-wordmotion'
 
   Plug 'voldikss/vim-floaterm'
-  Plug 'voldikss/vim-translator'
+  " Plug 'conweller/findr.vim'
 
   " Directory browser
   Plug 'scrooloose/nerdtree'
+  Plug 'xuyuanp/nerdtree-git-plugin'
+  Plug 'ryanoasis/vim-devicons'
 
   " Languages
   Plug 'othree/yajs.vim'
@@ -63,7 +65,7 @@ if has('nvim')
 endif
 
 " ================================================================================ "
-"                                     ***THEMES                                    "
+"                                     MARK: THEMES                                    "
 " ================================================================================ "
 function! SetTheme(theme)
   if a:theme == 'dark'
@@ -96,6 +98,7 @@ function! CustomizeTheme(theme)
     hi StatusLine guibg=NONE guifg=#777777 gui=none
     hi StatusLineNC guibg=NONE guifg=#333333 gui=none
 
+    hi VertSplit guibg=none guifg=#333333 ctermbg=none ctermfg=none
     " hi Comment guibg=none ctermbg=none gui=italic cterm=italic
     " hi Comment guibg=none ctermbg=none gui=italic cterm=italic
 
@@ -118,6 +121,8 @@ function! CustomizeTheme(theme)
     " hi TabLineFill guibg=none ctermbg=none guifg=253 ctermfg=253 gui=bold cterm=bold
     " hi TabLine guibg=none ctermbg=242 guifg=253 ctermfg=253 gui=none cterm=none
     " hi TabLine guibg=#555555 ctermbg=none guifg=#999999 ctermfg=253 gui=none cterm=none
+    hi VertSplit guibg=none guifg=#eeeeee ctermbg=none ctermfg=none
+    highlight EndOfBuffer guifg=white guibg=white
 
     hi TabLineSel guibg=#442288 guifg=#aa88ee gui=bold
     hi TabLineFileSel guibg=#442288 guifg=#ffffff gui=bold
@@ -128,8 +133,8 @@ function! CustomizeTheme(theme)
     hi MatchParen guibg=#eeeeee ctermbg=254 guifg=#777777 ctermfg=black
     hi Search guibg=#FECB32 guifg=none gui=bold ctermbg=221 cterm=bold
 
-    hi StatusLine guibg=NONE guifg=#777777 gui=none ctermbg=none ctermfg=gray
-    hi StatusLineNC guibg=NONE guifg=#dddddd gui=none ctermbg=none ctermfg=lightgray
+    hi StatusLine guibg=#eeeeee guifg=#777777
+    hi StatusLineNC guibg=#eeeeee guifg=#dddddd
 
     hi Comment guibg=NONE guifg=#aaaaaa ctermfg=248 ctermbg=NONE gui=none
 
@@ -145,7 +150,6 @@ function! CustomizeTheme(theme)
     call matchadd('TrailingSpace', '\s\+$', 80)
   endif
   " Theme modification
-  hi VertSplit guibg=none guifg=#333333 ctermbg=none ctermfg=none
   hi Constant guibg=none ctermbg=none
   hi Special guibg=none ctermbg=none
   hi Group guibg=none ctermbg=none
@@ -164,13 +168,15 @@ function! CustomizeTheme(theme)
 endfunction
 
 " ================================================================================ "
-"                                      ***KEYMAPS                                  "
+"                                      MARK: KEYMAPS                                  "
 " ================================================================================ "
 nnoremap <space> <Nop>
 let mapleader = " "
 nnoremap j gj
 nnoremap k gk
-nnoremap m @
+" nnoremap mm @
+" nnoremap mr q
+nnoremap q <Nop>
 nnoremap <BS> <Nop>
 map / <Plug>(incsearch-forward)
 map ? <Plug>(incsearch-backward)
@@ -206,17 +212,15 @@ nnoremap <C-o> <C-i>
 " nmap <leader>i :echo expand('%:p:h') . "/"<CR>
 nnoremap <leader>k :noh<return><esc>
 nnoremap <leader>p :e $MYVIMRC<CR>
-nnoremap <leader>v :Lines***<CR>
+nnoremap <leader>v :Lines MARK: \| TODO: \| FIXME: <CR>
 " nnoremap <leader>v :source $MYVIMRC<CR>:LightlineReload<CR>
 " nnoremap <leader>v :source $MYVIMRC<CR>:LightlineReload<CR>
 nnoremap <leader>q :q<CR>
 nnoremap <leader>s :w<CR>
-nnoremap <leader>t :tabnew<CR>
 nnoremap <leader>e :edit /<left>
 nnoremap <leader>r :%s///g<left><left><left>
 nnoremap <leader>c :lcd %:p:h<CR>
 vnoremap <C-r> "hy:%s/<C-r>h//gc<left><left><left>
-" nnoremap <leader>n :tabn<CR>
 
 " Git
 nnoremap <leader>gd :Gdiff<CR>
@@ -233,7 +237,10 @@ vnoremap <leader>f y:Rg<space><C-r>0<CR>
 nnoremap <leader>* viwy:Rg<space><C-r>0<CR>
 nnoremap * *N
 nnoremap <leader>b :Windows<CR>
-nnoremap <leader>t :tabnew<CR>
+nnoremap <leader>t :tabnew<CR>:NERDTreeMirror<CR><C-w><C-w>
+nnoremap <tab> :tabn<CR>
+nnoremap <S-Tab> :tabp<CR>
+inoremap <S-Tab> <C-d>
 nnoremap <leader>1 :tabn1<CR>
 nnoremap <leader>2 :tabn2<CR>
 nnoremap <leader>3 :tabn3<CR>
@@ -282,7 +289,7 @@ endif
 xnoremap <expr> p 'pgv"'.v:register.'y`>'
 
 " ================================================================================ "
-"                                    ***SETTINGS                                   "
+"                                    MARK: SETTINGS                                   "
 " ================================================================================ "
 if has("autocmd")
   autocmd ColorScheme * call SetTheme(myTheme)
@@ -303,6 +310,8 @@ set noautochdir
 set splitbelow
 set splitright
 set t_ut= "disable the Background Color Erase that messes with some color schemes
+set switchbuf=usetab,newtab
+set hidden
 set autoread
 set autowriteall
 set ignorecase
@@ -351,17 +360,17 @@ let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
 let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
 
 " ================================================================================ "
-"                                ***PLUGIN-SETTINGS                                "
+"                                MARK: PLUGIN-SETTINGS                                "
 " ================================================================================ "
-" *** plugin linenum
+" MARK: plugin linenum
 let g:line_number_interval#enable_at_startup = 1
 let g:line_number_interval = 5
 
-" *** plugin syntax
+" MARK: plugin syntax
 syntax match devComment "\v.*$"
 highlight link devComment Comment
 
-" *** plugin incsearch
+" MARK: plugin incsearch
 function! s:config_easyfuzzymotion(...) abort
   return extend(copy({
   \   'converters': [incsearch#config#fuzzyword#converter()],
@@ -376,7 +385,7 @@ noremap <silent><expr> <Space>/ incsearch#go(<SID>config_easyfuzzymotion())
 nmap <leader>/ <Plug>(incsearch-fuzzy-/)
 nmap <leader>? <Plug>(incsearch-fuzzy-?)
 
-" *** plugin move
+" MARK: plugin move
 let g:move_map_keys = 0
 nmap J V<Plug>MoveBlockDown<Esc>
 nmap K V<Plug>MoveBlockUp<Esc>
@@ -387,7 +396,7 @@ nnoremap L V>gv<Esc>
 vnoremap H <gv
 vnoremap L >gv
 
-" *** plugin javascript
+" MARK: plugin javascript
 set path=.,src
 set suffixesadd=.js,.jsx
 
@@ -414,7 +423,7 @@ function! LoadMainNodeModule(fname)
 endfunction
 set includeexpr=LoadMainNodeModule(v:fname)
 
-" *** plugin test
+" MARK: plugin test
 let test#javascript#jest#executable = 'CI=true npm test --colors'
 " make test commands execute using dispatch.vim
 let test#strategy = "neovim"
@@ -428,7 +437,7 @@ command! -nargs=0 JestCurrent :call  CocAction('runCommand', 'jest.fileTest', ['
 " Init jest in current cwd, require global jest command exists
 command! JestInit :call CocAction('runCommand', 'jest.init')
 
-" *** plugin coc
+" MARK: plugin coc
 " nnoremap <leader><leader> :CocList<CR>
 nmap gd <Plug>(coc-definition)
 nmap gr <Plug>(coc-references)
@@ -455,7 +464,7 @@ function! s:check_back_space() abort
   return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
 
-" *** plugin lightline
+" MARK: plugin lightline
 command! LightlineReload call LightlineReload()
 
 function! LightlineReload()
@@ -515,7 +524,7 @@ function! LightlineCocFixes() abort
 endfunction
 
 let g:lightline = {
-  \ 'colorscheme': 'molokai',
+  \ 'colorscheme': 'ayu_light',
   \ 'active': {
   \   'left': [
   \     [ 'mode', 'paste', 'statuslinetabs' ],
@@ -574,7 +583,7 @@ let g:lightline.component_type = {
 
 autocmd User CocDiagnosticChange call lightline#update()
 
-" *** plugin tab bar
+" MARK: plugin tab bar
 set tabline=%!MyTabLine()
 function! MyTabLine()
   let s = ''
@@ -644,20 +653,20 @@ function! MyTabFile(n)
   return filename
 endfunction
 
-" *** plugin javascript
+" MARK: plugin javascript
 let g:javascript_plugin_jsdoc = 1
 
-" *** plugin git
+" MARK: plugin git
 set signcolumn=yes
 let g:gitgutter_override_sign_column_highlight = 0
 set updatetime=300
 
-" *** plugin markdown
+" MARK: plugin markdown
 let g:vim_markdown_folding_disabled = 1
 set conceallevel=0
 let g:markdown_fenced_languages = ['css', 'javascript', 'js=javascript', 'json=javascript']
 
-" *** plugin rg
+" MARK: plugin rg
 " --column: Show column number
 " --line-number: Show line number
 " --no-heading: Do not show file headings in results
@@ -677,7 +686,7 @@ let g:rg_derive_root = 1
 
 let g:netrw_list_hide = &wildignore
 
-" *** plugin fzf
+" MARK: plugin fzf
 function! CreateCenteredFloatingWindow()
     let width = min([&columns - 4, max([80, &columns - 20])])
     let height = min([&lines - 4, max([20, &lines - 10])])
@@ -702,6 +711,7 @@ function! CreateCenteredFloatingWindow()
 endfunction
 
 let g:fzf_layout = { 'window': 'call CreateCenteredFloatingWindow()' }
+let $FZF_DEFAULT_COMMAND = 'rg --files'
 set rtp+=~/.fzf
 
 command! -bang -nargs=? -complete=dir Files
@@ -747,7 +757,15 @@ augroup _fzf
   autocmd!
 augroup END
 
-" *** Floating window help
+" MARK: Findr
+" let g:findr_border = {
+"     \   'top':    ['╭', '─', '╮'],
+"     \   'middle': ['│', ' ', '│'],
+"     \   'bottom': ['╰', '─', '╯'],
+"     \ }
+" nnoremap <leader>i :Findr<CR>
+
+" MARK: Floating window help
 function! HelpFloatingWindow(query) abort
     let l:buf = CreateCenteredFloatingWindow()
     call nvim_set_current_buf(l:buf)
@@ -759,7 +777,7 @@ function! HelpFloatingWindow(query) abort
 endfunction
 command! -complete=help -nargs=? Help call HelpFloatingWindow(<q-args>)
 
-" *** Terminal floating window
+" MARK: Terminal floating window
 
 let g:floaterm_background='black'
 let g:floaterm_border_color='blue'
@@ -772,7 +790,7 @@ nnoremap tt :FloatermToggle<CR>
 nnoremap tn :FloatermNext<CR>
 nnoremap tp :FloatermPrev<CR>
 
-" *** wordmotion
+" MARK: wordmotion
 let g:wordmotion_mappings = {
 \ 'w' : 'W',
 \ 'b' : 'B',
@@ -783,48 +801,66 @@ let g:wordmotion_mappings = {
 \ '<C-R><C-W>' : ''
 \ }
 
-" *** plugin nerd
-nmap <leader>, :call OpenNERDTree()<CR>
+" MARK: plugin nerd
+nmap <leader>, :NERDTreeFind<CR>
 let NERDTreeDirArrowExpandable="\u00a0"
 let NERDTreeDirArrowCollapsible="\u00a0"
 let NERDTreeNodeDelimiter="\u00b7"
 let NERDTreeAutoCenter=0
 let NERDTreeAutoDeleteBuffer=1
-let NERDTreeQuitOnOpen=1
+let NERDTreeQuitOnOpen=0
 let NERDTreeMinimalUI=1
-let NERDTreeWinSize=24
-" Check if NERDTree is open or active
+let NERDTreeWinSize=34
+" Autostart nerdtree
+autocmd StdinReadPre * let s:std_in=1
+autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
+" Autoquit nerdtree if the only one
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+" Follow mode
 function! IsNERDTreeOpen()
   return exists("t:NERDTreeBufName") && (bufwinnr(t:NERDTreeBufName) != -1)
 endfunction
-function! OpenNERDTree()
-  if &modifiable && IsNERDTreeOpen()
-    NERDTreeToggle
-  elseif IsNERDTreeOpen()
-    NERDTreeToggle
-    " execute "normal! <C-w>p:NERDTree<CR>uCD<C-w>p:NERDTreeFind<CR>"
-  elseif strlen(expand('%')) > 0 && !&diff " new file
-    NERDTreeFind
-    execute "normal! zb"
-  else
-    NERDTreeToggle
-  endif
-endfunction
-" Call NERDTreeFind iff NERDTree is active, current window contains a modifiable
-" file, and we're not in vimdiff
 function! SyncTree()
   if &modifiable && IsNERDTreeOpen() && strlen(expand('%')) > 0 && !&diff
     NERDTreeFind
-    execute "normal! zb"
     wincmd p
   endif
 endfunction
+" Highlight currently open buffer in NERDTree
+autocmd BufEnter * call SyncTree()
+" Never open files in nerdtree
+autocmd FileType nerdtree let t:nerdtree_winnr = bufwinnr('%')
+autocmd BufWinEnter * call PreventBuffersInNERDTree()
 
-" *** plugin devicons
+function! PreventBuffersInNERDTree()
+  if bufname('#') =~ 'NERD_tree' && bufname('%') !~ 'NERD_tree'
+    \ && exists('t:nerdtree_winnr') && bufwinnr('%') == t:nerdtree_winnr
+    \ && &buftype == '' && !exists('g:launching_fzf')
+    let bufnum = bufnr('%')
+    close
+    exe 'b ' . bufnum
+    NERDTree
+  endif
+  if exists('g:launching_fzf') | unlet g:launching_fzf | endif
+endfunction
+
+" MARK: plugin devicons
 let g:WebDevIconsUnicodeDecorateFolderNodes = 1
 let g:DevIconsEnableFoldersOpenClose = 1
 
-" *** move tabs to splits
+" MARK: NERDtree git indicators
+let g:NERDTreeIndicatorMapCustom = {
+    \ "Modified"  : "*",
+    \ "Staged"    : "✚",
+    \ "Untracked" : "*",
+    \ "Renamed"   : "r",
+    \ "Unmerged"  : "u",
+    \ "Deleted"   : "✖",
+    \ "Dirty"     : "*",
+    \ "Clean"     : "✔︎"
+    \ }
+
+" MARK: move tabs to splits
 function MoveToPrevTab()
   "there is only one window
   if tabpagenr('$') == 1 && winnr('$') == 1
@@ -872,7 +908,7 @@ endfunc
 nnoremap <C-w>. :call MoveToNextTab()<CR>
 nnoremap <C-w>, :call MoveToPrevTab()<CR>
 
-" *** plugin zoom
+" MARK: plugin zoom
 " Zoom / Restore window.
 function! s:ZoomToggle() abort
   if exists('t:zoomed') && t:zoomed
@@ -888,7 +924,7 @@ endfunction
 command! ZoomToggle call s:ZoomToggle()
 nnoremap <leader>z :ZoomToggle<CR>
 
-" *** plugin tagbar
+" MARK: plugin tagbar
 let g:tagbar_type_elm = {
       \ 'kinds' : [
       \ 'f:function:0:0',
@@ -902,7 +938,7 @@ let g:tagbar_type_elm = {
       \ ]
       \}
 
-" *** reload vim
+" MARK: reload vim
 if !exists('*ReloadVim')
   function ReloadVim()
     source $MYVIMRC
@@ -911,7 +947,7 @@ if !exists('*ReloadVim')
 endif
 command! Reload :call ReloadVim()
 
-" *** macros
+" MARK: macros
 let @c="oconsole.error('#DEBUG#');\<Esc>hhi"
 
 call SetTheme(myTheme)
