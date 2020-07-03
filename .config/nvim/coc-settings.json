@@ -8,11 +8,17 @@
   "suggest.enablePreview": true,
   "suggest.timeout": 5000,
   "suggest.noselect": true,
+  "snippets.ultisnips.directories": [
+    "UltiSnips",
+    "~/Documents/Snippets"
+  ],
+  "diagnostic.enableMessage": "never",
   "diagnostic.errorSign": "💩",
   "diagnostic.warningSign": "🤔",
   "diagnostic.infoSign": "🤔",
   "diagnostic.maxWindowHeight": 30,
   "diagnostic.maxWindowWidth": 110,
+  "diagnostic.messageTarget": "echo",
   "codeLens.enable": false,
   "git.addedSign.hlGroup": "GitGutterAdd",
   "git.changedSign.hlGroup": "GitGutterChange",

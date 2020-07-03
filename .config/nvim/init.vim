@@ -30,6 +30,10 @@ if has('nvim')
   Plug 'tmux-plugins/vim-tmux-focus-events'
   Plug 'matze/vim-move'
   Plug 'jceb/vim-orgmode'
+  Plug 'alok/notational-fzf-vim'
+  Plug 'ap/vim-css-color'
+  Plug 'danilamihailov/beacon.nvim'
+  Plug 'psliwka/vim-smoothie'
 
   Plug 'itchyny/lightline.vim'
   Plug 'majutsushi/tagbar'
@@ -47,15 +51,19 @@ if has('nvim')
   Plug 'ryanoasis/vim-devicons'
 
   " Languages
-  Plug 'othree/yajs.vim'
+  " Plug 'pangloss/vim-javascript'
+  Plug 'yuezk/vim-js'
+  Plug 'jparise/vim-graphql'
+  Plug 'alcesleo/vim-uppercase-sql'
+  Plug 'Quramy/vim-js-pretty-template'
   Plug 'leafgarland/typescript-vim'
-  " Plug 'herringtondarkholme/yats.vim'
   Plug 'maxmellon/vim-jsx-pretty'
   Plug 'keith/swift.vim'
   Plug 'andys8/vim-elm-syntax', { 'for': ['elm'] }
   Plug 'styled-components/vim-styled-components', { 'branch': 'main' }
   " Use release branch
   Plug 'neoclide/coc.nvim', {'branch': 'release'}
+  Plug 'antoinemadec/coc-fzf'
   Plug 'honza/vim-snippets'
   Plug 'janko/vim-test'
 
@@ -124,6 +132,8 @@ function! CustomizeTheme(theme)
     hi VertSplit guibg=none guifg=#eeeeee ctermbg=none ctermfg=none
     highlight EndOfBuffer guifg=white guibg=white
 
+    hi Beacon guibg=#aaaaee
+
     hi TabLineSel guibg=#442288 guifg=#aa88ee gui=bold
     hi TabLineFileSel guibg=#442288 guifg=#ffffff gui=bold
     hi TabLineDirSel guibg=#442288 guifg=#aa88ee gui=bold
@@ -141,7 +151,7 @@ function! CustomizeTheme(theme)
     hi SignColumn guibg=none ctermbg=none
     hi CursorLineNr guibg=none ctermbg=none
     hi CursorLine guibg=none ctermbg=none guifg=#000000 ctermfg=black gui=bold cterm=bold
-    hi LineNr guibg=none guifg=#aaaaaa ctermbg=none
+    hi LineNr guibg=none guifg=#cccccc ctermbg=none
     hi GitGutterAdd guibg=#baf49c ctermbg=none guifg=#3a990a ctermfg=green
     hi GitGutterChange guibg=#b5dafc ctermbg=none guifg=#0CA8FC ctermfg=blue
     hi GitGutterDelete guibg=#f7b4be ctermbg=none guifg=#e0081e ctermfg=red
@@ -195,20 +205,20 @@ nnoremap [[ :cp<CR>
 nnoremap 0 ^
 nnoremap ^ 0
 nnoremap - $
-nnoremap <leader>gg :call Fzf_open('git')<CR>
-nnoremap <leader><leader> :checktime<CR>:syntax sync fromstart<CR>
+" nnoremap <leader><leader> :checktime<CR>:syntax sync fromstart<CR>
 nnoremap zm zz
 nnoremap zz zt4k4j
 nnoremap zb zb4j4k
-nnoremap <C-d> 4j
-nnoremap <C-u> 4k
+" nnoremap <C-d> 4j
+" nnoremap <C-u> 4k
 nnoremap y "*y
 nnoremap Y y$
 nnoremap gb <C-^>
-nnoremap gf <C-w>gf
-nnoremap <C-w>gf gf
+nnoremap gt <C-w>gf:NERDTreeMirror<CR><C-w><C-w>
 nnoremap <C-i> <C-o>
 nnoremap <C-o> <C-i>
+nnoremap <S-Tab> o
+inoremap <S-Tab> <C-d>
 " nmap <leader>i :echo expand('%:p:h') . "/"<CR>
 nnoremap <leader>k :noh<return><esc>
 nnoremap <leader>p :e $MYVIMRC<CR>
@@ -238,9 +248,6 @@ nnoremap <leader>* viwy:Rg<space><C-r>0<CR>
 nnoremap * *N
 nnoremap <leader>b :Windows<CR>
 nnoremap <leader>t :tabnew<CR>:NERDTreeMirror<CR><C-w><C-w>
-nnoremap <tab> :tabn<CR>
-nnoremap <S-Tab> :tabp<CR>
-inoremap <S-Tab> <C-d>
 nnoremap <leader>1 :tabn1<CR>
 nnoremap <leader>2 :tabn2<CR>
 nnoremap <leader>3 :tabn3<CR>
@@ -295,7 +302,7 @@ if has("autocmd")
   autocmd ColorScheme * call SetTheme(myTheme)
   autocmd filetype crontab setlocal nobackup nowritebackup
   " set filetypes as typescript.tsx
-  autocmd BufNewFile,BufRead *.tsx,*.jsx set filetype=typescript.tsx
+  autocmd BufNewFile,BufRead *.js,*.ts,*.tsx,*.jsx set filetype=typescript.tsx
   autocmd BufRead /tmp/psql.edit.* set syntax=sql
   autocmd BufEnter * :syntax sync fromstart
   autocmd BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$")
@@ -322,8 +329,8 @@ set undofile
 set nobackup
 set noswapfile
 set noshowmode
-set nonumber
-set numberwidth=2
+set number
+set numberwidth=3
 set linespace=0
 set whichwrap=b,s,<,>,h,l,[,]
 set backspace+=indent,eol,start
@@ -342,7 +349,7 @@ set iskeyword+=-
 set cinoptions=+0
 set showcmd         " show command in bottom bar
 set wildmenu        " visual autocomplete for command menu
-set wildignore+=*/node_modules/,.git,.git/*,node_modules/*,node_modules,.DS_Store
+set wildignore+=*/node_modules/,.git,.git/*,node_modules/*,node_modules,.DS_Store,*/dist/,dist/*,dist
 set wildcharm=<C-z>
 set wildignorecase
 set wildmode=full
@@ -351,7 +358,7 @@ set lazyredraw      " redraw only when we need to.
 set showmatch       " highlight matching [{()}]
 set incsearch       " search as characters are entered
 set hlsearch        " highlight matches
-set showtabline=0
+set showtabline=2
 set laststatus=2
 set mouse=
 set ff=unix
@@ -439,12 +446,13 @@ command! JestInit :call CocAction('runCommand', 'jest.init')
 
 " MARK: plugin coc
 " nnoremap <leader><leader> :CocList<CR>
+nmap gi <Plug>(coc-diagnostic-info)
 nmap gd <Plug>(coc-definition)
 nmap gr <Plug>(coc-references)
-nmap gen <Plug>(coc-diagnostic-next-error)
-nmap gep <Plug>(coc-diagnostic-prev-error)
-nmap gwn <Plug>(coc-diagnostic-next)
-nmap gwp <Plug>(coc-diagnostic-prev)
+nmap gw <Plug>(coc-diagnostic-next)<Esc>
+nmap ge <Plug>(coc-diagnostic-next-error)<Esc>
+" nmap gep <Plug>(coc-diagnostic-prev-error)
+" nmap gwp <Plug>(coc-diagnostic-prev)
 " use <c-space>for trigger completion
 inoremap <silent><expr> <c-space> coc#refresh()
 inoremap <silent><expr> <c-n> coc#refresh()
@@ -478,13 +486,21 @@ function! LightlineGitBlame() abort
   return blame
 endfunction
 
-function! LightlineStatuslineTabs() abort
+function! LightlineTabs() abort
   return MyTabLine()
 endfunction
 
-function! MyLightLineLineInfo()
+function! CurrentLightLineLineInfo()
   if &ft !=? 'nerdtree'
     return line('.')
+  else
+    return ''
+  endif
+endfunction
+
+function! TotalLightLineLineInfo()
+  if &ft !=? 'nerdtree'
+    return line('$')
   else
     return ''
   endif
@@ -527,12 +543,15 @@ let g:lightline = {
   \ 'colorscheme': 'ayu_light',
   \ 'active': {
   \   'left': [
-  \     [ 'mode', 'paste', 'statuslinetabs' ],
+  \     [ 'mode', 'paste' ],
+  \     [ 'modified' ],
   \     [ 'coc_error', 'coc_warning', 'coc_info', 'coc_hint', 'coc_fix' ]
   \   ],
   \   'right':[
-  \     [ 'lineinfo' ],
-  \     [ 'blame', 'gitbranch' ]
+  \     [ 'totallines' ],
+  \     [ 'filetype' ],
+  \     [ 'blame' ],
+  \     [ 'gitbranch' ]
   \   ],
   \ },
   \ 'mode_map': {
@@ -554,17 +573,17 @@ let g:lightline = {
   \   'left': [],
   \   'right': []
   \ },
-  \ 'tabline': {
-  \   'left': [],
-  \   'right': []
+  \ 'enable': {
+    \ 'statusline': 1,
+    \ 'tabline': 0
   \ },
   \ 'component_function': {
   \   'blame': 'LightlineGitBlame',
   \   'gitbranch': 'fugitive#head',
-  \   'lineinfo': 'MyLightLineLineInfo'
+  \   'currentline': 'CurrentLightLineLineInfo',
+  \   'totallines': 'TotalLightLineLineInfo'
   \ },
   \ 'component_expand': {
-  \   'statuslinetabs': 'LightlineStatuslineTabs',
   \   'coc_error'     : 'LightlineCocErrors',
   \   'coc_warning'   : 'LightlineCocWarnings',
   \   'coc_info'      : 'LightlineCocInfos',
@@ -587,8 +606,8 @@ autocmd User CocDiagnosticChange call lightline#update()
 set tabline=%!MyTabLine()
 function! MyTabLine()
   let s = ''
-    " select the highlighting
-    for i in range(tabpagenr('$'))
+  " select the highlighting
+  for i in range(tabpagenr('$'))
     if i + 1 == tabpagenr()
       let s .= '%#TabLineSel# '
     else
@@ -656,6 +675,13 @@ endfunction
 " MARK: plugin javascript
 let g:javascript_plugin_jsdoc = 1
 
+" MARK: plugin graphql
+let g:graphql_javascript_tags = ["gql", "graphql", "Relay.QL"]
+" Register tag name associated the filetype
+call jspretmpl#register_tag('gql', 'graphql')
+autocmd FileType javascript JsPreTmpl
+autocmd FileType javascript.jsx JsPreTmpl
+
 " MARK: plugin git
 set signcolumn=yes
 let g:gitgutter_override_sign_column_highlight = 0
@@ -688,8 +714,8 @@ let g:netrw_list_hide = &wildignore
 
 " MARK: plugin fzf
 function! CreateCenteredFloatingWindow()
-    let width = min([&columns - 4, max([80, &columns - 20])])
-    let height = min([&lines - 4, max([20, &lines - 10])])
+    let width = min([&columns - 4, max([80, &columns - 100])])
+    let height = min([&lines - 4, max([20, &lines - 0])])
     let top = ((&lines - height) / 2) - 1
     let left = (&columns - width) / 2
     let opts = {'relative': 'editor', 'row': top, 'col': left, 'width': width, 'height': height, 'style': 'minimal'}
@@ -715,16 +741,26 @@ let $FZF_DEFAULT_COMMAND = 'rg --files'
 set rtp+=~/.fzf
 
 command! -bang -nargs=? -complete=dir Files
-    \ call fzf#vim#files(<q-args>, fzf#vim#with_preview(), <bang>0)
+    \ call fzf#vim#files(<q-args>, fzf#vim#with_preview('up:60%'), <bang>0)
 function! RipgrepFzf(query, fullscreen)
   let command_fmt = 'rg --column --line-number --no-heading --color=always --smart-case %s || true'
   let initial_command = printf(command_fmt, shellescape(a:query))
   let reload_command = printf(command_fmt, '{q}')
-  let spec = {'options': ['--phony', '--query', a:query, '--bind', 'change:reload:'.reload_command]}
+  let spec = {'options': ['--phony', '--query', a:query, '--bind', 'change:reload:'.reload_command, '--preview-window', 'up:60%']}
   call fzf#vim#grep(initial_command, 1, fzf#vim#with_preview(spec), a:fullscreen)
 endfunction
-map <leader>o :Files<CR>
-map <leader>gg :GF?<CR>
+nnoremap <leader>o <Nop>
+map <leader>oo :Files<CR>
+nnoremap <leader><leader> :Files<CR>
+nnoremap <leader>ot :FloatermToggle<CR>
+nnoremap <leader>od :CocFzfList diagnostics<CR>
+nnoremap <leader>os :CocFzfList symbols<CR>
+nnoremap <leader>of :CocFzfList symbols --kind Function<CR>
+nnoremap <leader>oa :CocFzfList actions<CR>
+" nnoremap <leader>oto :FloatermNew<CR>
+" nnoremap tn :FloatermNext<CR>
+" nnoremap tp :FloatermPrev<CR>
+map <leader>og :GF?<CR>
 command! -nargs=* -bang Rg call RipgrepFzf(<q-args>, <bang>0)
 
 function! s:fzf_neighboring_files_sink(line)
@@ -747,11 +783,11 @@ function! s:fzf_neighbouring_files()
   call fzf#run(fzf#vim#with_preview(fzf#wrap({
         \ 'source': command,
         \ 'sink':   function('s:fzf_neighboring_files_sink'),
-        \ 'options': '-m -x +s',
+        \ 'options': '-m -x +s --preview-window=up:60%',
         \ 'window': 'call CreateCenteredFloatingWindow()' })))
 endfunction
 command! FZFNeigh call s:fzf_neighbouring_files()
-nnoremap <leader>i :FZFNeigh<CR>
+nnoremap <leader>oi :FZFNeigh<CR>
 
 augroup _fzf
   autocmd!
@@ -785,10 +821,12 @@ let g:floaterm_position='center'
 let g:floaterm_height=0.6
 let g:floaterm_width=0.9
 let g:floaterm_borderchars=['─', '│', '─', '│', '╭', '╮', '╯', '╰']
-nnoremap to :FloatermNew<CR>
-nnoremap tt :FloatermToggle<CR>
-nnoremap tn :FloatermNext<CR>
-nnoremap tp :FloatermPrev<CR>
+
+" MARK: org
+autocmd FileType org setlocal foldlevel=99
+
+" MARK: notational
+let g:nv_search_paths = ['~/Developer/org']
 
 " MARK: wordmotion
 let g:wordmotion_mappings = {
@@ -810,7 +848,8 @@ let NERDTreeAutoCenter=0
 let NERDTreeAutoDeleteBuffer=1
 let NERDTreeQuitOnOpen=0
 let NERDTreeMinimalUI=1
-let NERDTreeWinSize=34
+let NERDTreeWinSize=50
+let NERDTreeRespectWildIgnore=1
 " Autostart nerdtree
 autocmd StdinReadPre * let s:std_in=1
 autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
