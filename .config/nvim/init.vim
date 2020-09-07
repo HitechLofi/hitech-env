@@ -1,4 +1,4 @@
-let myTheme = 'light'
+let myTheme = 'dark'
 
 " ~~~~~~~~~~~~~~~~~~~
 "       INDEX
@@ -32,8 +32,7 @@ if has('nvim')
   Plug 'jceb/vim-orgmode'
   Plug 'alok/notational-fzf-vim'
   Plug 'ap/vim-css-color'
-  Plug 'danilamihailov/beacon.nvim'
-  Plug 'psliwka/vim-smoothie'
+  Plug 'flazz/vim-colorschemes'
 
   Plug 'itchyny/lightline.vim'
   Plug 'majutsushi/tagbar'
@@ -73,13 +72,70 @@ if has('nvim')
 endif
 
 " ================================================================================ "
+"                                 LIGHTLINE                                        "
+" ================================================================================ "
+let g:lightline = {
+  \ 'colorscheme': 'ayu_light',
+  \ 'active': {
+  \   'left': [
+  \     [ 'mode', 'paste' ],
+  \     [ 'modified' ],
+  \     [ 'coc_error', 'coc_warning', 'coc_info', 'coc_hint', 'coc_fix' ]
+  \   ],
+  \   'right':[
+  \     [ 'totallines' ],
+  \     [ 'filetype' ],
+  \     [ 'blame' ],
+  \     [ 'gitbranch' ]
+  \   ],
+  \ },
+  \ 'mode_map': {
+  \ 'n' : '(⊃⌐■_■)⊃',
+  \ 'i' : ' _〆(￣ー￣)',
+  \ 'R' : ' ─=≡Σ((( つ＞＜)つ',
+  \ 'v' : '( ・・)⊃-二',
+  \ 'V' : '( ・・)⊃-二二',
+  \ "\<C-v>": '( ・・)つ●',
+  \ 'c' : 'v(-_-)v',
+  \ 's' : 'S',
+  \ 'S' : 'SL',
+  \ "\<C-s>": 'SB',
+  \ 't': 'T',
+  \ },
+  \ 'separator': { 'left': '', 'right': '' },
+  \ 'subseparator': { 'left': '', 'right': '' },
+  \ 'inactive': {
+  \   'left': [],
+  \   'right': []
+  \ },
+  \ 'enable': {
+    \ 'statusline': 1,
+    \ 'tabline': 0
+  \ },
+  \ 'component_function': {
+  \   'blame': 'LightlineGitBlame',
+  \   'gitbranch': 'fugitive#head',
+  \   'currentline': 'CurrentLightLineLineInfo',
+  \   'totallines': 'TotalLightLineLineInfo'
+  \ },
+  \ 'component_expand': {
+  \   'coc_error'     : 'LightlineCocErrors',
+  \   'coc_warning'   : 'LightlineCocWarnings',
+  \   'coc_info'      : 'LightlineCocInfos',
+  \   'coc_hint'      : 'LightlineCocHints',
+  \   'coc_fix'       : 'LightlineCocFixes'
+  \ },
+\ }
+
+" ================================================================================ "
 "                                     MARK: THEMES                                    "
 " ================================================================================ "
 function! SetTheme(theme)
   if a:theme == 'dark'
     " Dark
     set background=dark
-    color Parapluie
+    " color Parapluie
+    color molokai
   else
     " Light
     set background=light
@@ -120,6 +176,16 @@ function! CustomizeTheme(theme)
     hi GitGutterChangeDelete guibg=none ctermbg=none guifg=#0CA8FC ctermfg=blue
     highlight TrailingSpace guibg=#424242 guifg=#ffffff
     call matchadd('TrailingSpace', '\s\+$', 80)
+
+    " wombat, solarized, powerline, powerlineish,
+    " jellybeans, molokai, seoul256, darcula,
+    " selenized_dark, selenized_black, selenized_light, selenized_white,
+    " Tomorrow, Tomorrow_Night, Tomorrow_Night_Blue,
+    " Tomorrow_Night_Bright, Tomorrow_Night_Eighties, PaperColor,
+    " landscape, one, materia, material, OldHope, nord, deus,
+    " simpleblack, srcery_drk, ayu_mirage, ayu_light, ayu_dark and
+    " 16color
+    let g:lightline.colorscheme = 'molokai'
   else
     hi Normal guibg=#FFFFFF ctermbg=none
     hi NonText guifg=#BBBBBB guibg=none ctermbg=none
@@ -158,6 +224,8 @@ function! CustomizeTheme(theme)
     hi GitGutterChangeDelete guibg=#b5dafc ctermbg=none guifg=#0CA8FC ctermfg=blue
     highlight TrailingSpace guibg=#eeeeee guifg=#888888
     call matchadd('TrailingSpace', '\s\+$', 80)
+
+    let g:lightline.colorscheme = 'ayu_light'
   endif
   " Theme modification
   hi Constant guibg=none ctermbg=none
@@ -200,6 +268,7 @@ inoremap <C-j> <Esc>o
 inoremap <C-k> <Esc>ko
 nnoremap <leader>h <C-w>h
 nnoremap <leader>l <C-w>l
+nnoremap <leader>w <C-w><C-p>
 nnoremap ]] :cn<CR>
 nnoremap [[ :cp<CR>
 nnoremap 0 ^
@@ -209,8 +278,8 @@ nnoremap - $
 nnoremap zm zz
 nnoremap zz zt4k4j
 nnoremap zb zb4j4k
-" nnoremap <C-d> 4j
-" nnoremap <C-u> 4k
+nnoremap <C-d> 4j
+nnoremap <C-u> 4k
 nnoremap y "*y
 nnoremap Y y$
 nnoremap gb <C-^>
@@ -539,59 +608,6 @@ function! LightlineCocFixes() abort
   return s:lightline_coc_diagnostic('fixes', 'fix', '❕')
 endfunction
 
-let g:lightline = {
-  \ 'colorscheme': 'ayu_light',
-  \ 'active': {
-  \   'left': [
-  \     [ 'mode', 'paste' ],
-  \     [ 'modified' ],
-  \     [ 'coc_error', 'coc_warning', 'coc_info', 'coc_hint', 'coc_fix' ]
-  \   ],
-  \   'right':[
-  \     [ 'totallines' ],
-  \     [ 'filetype' ],
-  \     [ 'blame' ],
-  \     [ 'gitbranch' ]
-  \   ],
-  \ },
-  \ 'mode_map': {
-  \ 'n' : '(⊃⌐■_■)⊃',
-  \ 'i' : ' _〆(￣ー￣)',
-  \ 'R' : ' ─=≡Σ((( つ＞＜)つ',
-  \ 'v' : '( ・・)⊃-二',
-  \ 'V' : '( ・・)⊃-二二',
-  \ "\<C-v>": '( ・・)つ●',
-  \ 'c' : 'v(-_-)v',
-  \ 's' : 'S',
-  \ 'S' : 'SL',
-  \ "\<C-s>": 'SB',
-  \ 't': 'T',
-  \ },
-  \ 'separator': { 'left': '', 'right': '' },
-  \ 'subseparator': { 'left': '', 'right': '' },
-  \ 'inactive': {
-  \   'left': [],
-  \   'right': []
-  \ },
-  \ 'enable': {
-    \ 'statusline': 1,
-    \ 'tabline': 0
-  \ },
-  \ 'component_function': {
-  \   'blame': 'LightlineGitBlame',
-  \   'gitbranch': 'fugitive#head',
-  \   'currentline': 'CurrentLightLineLineInfo',
-  \   'totallines': 'TotalLightLineLineInfo'
-  \ },
-  \ 'component_expand': {
-  \   'coc_error'     : 'LightlineCocErrors',
-  \   'coc_warning'   : 'LightlineCocWarnings',
-  \   'coc_info'      : 'LightlineCocInfos',
-  \   'coc_hint'      : 'LightlineCocHints',
-  \   'coc_fix'       : 'LightlineCocFixes'
-  \ },
-\ }
-
 let g:lightline.component_type = {
 \   'coc_error'        : 'error',
 \   'coc_warning'      : 'warning',
@@ -848,7 +864,7 @@ let NERDTreeAutoCenter=0
 let NERDTreeAutoDeleteBuffer=1
 let NERDTreeQuitOnOpen=0
 let NERDTreeMinimalUI=1
-let NERDTreeWinSize=50
+let NERDTreeWinSize=40
 let NERDTreeRespectWildIgnore=1
 " Autostart nerdtree
 autocmd StdinReadPre * let s:std_in=1
