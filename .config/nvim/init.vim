@@ -1,5 +1,3 @@
-let myTheme = 'dark'
-
 " ~~~~~~~~~~~~~~~~~~~
 "       INDEX
 " ~~~~~~~~~~~~~~~~~~~
@@ -130,19 +128,44 @@ let g:lightline = {
 " ================================================================================ "
 "                                     MARK: THEMES                                    "
 " ================================================================================ "
-function! SetTheme(theme)
-  if a:theme == 'dark'
-    " Dark
-    set background=dark
-    " color Parapluie
-    color molokai
-  else
-    " Light
-    set background=light
-    color Parasol
+function! Chomp(string)
+    return substitute(a:string, '\n\+$', '', '')
+endfunction
+
+function! SetThemeWithTimer(timer)
+  call SetTheme()
+endfunction
+
+let g:previousTheme = "none"
+function! SetTheme()
+  let osTheme = tolower(Chomp(system('defaults read -g AppleInterfaceStyle')))
+
+  " Normalize theme name (OS only prints dark if dark theme)
+  let myTheme = 'light'
+  if osTheme == 'dark'
+    let myTheme = 'dark'
   endif
 
-  call CustomizeTheme(a:theme)
+  if myTheme != g:previousTheme
+    if myTheme == 'dark'
+      echo "CHANGED TO DARK THEME".g:previousTheme." vs ".myTheme
+      " Dark
+      set background=dark
+      color Parapluie
+      " color molokai
+      call CustomizeTheme('dark')
+      call LightlineReload()
+    else
+      echo "CHANGED TO LIGHT THEME".g:previousTheme." vs ".myTheme
+      " Light
+      set background=light
+      color Parasol
+      call CustomizeTheme('light')
+      call LightlineReload()
+    endif
+
+    let g:previousTheme = myTheme
+  endif
 endfunction
 
 function! CustomizeTheme(theme)
@@ -187,8 +210,9 @@ function! CustomizeTheme(theme)
     " 16color
     let g:lightline.colorscheme = 'molokai'
   else
-    hi Normal guibg=#FFFFFF ctermbg=none
+    hi Normal guibg=none ctermbg=none
     hi NonText guifg=#BBBBBB guibg=none ctermbg=none
+    hi EndOfBuffer guifg=#bbbbbb guibg=none
     hi BookmarkLine guibg=158 ctermbg=158 guibg=none ctermfg=none
     hi BookmarkSign guibg=none ctermbg=none guifg=black ctermfg=black
     " hi TabLineSel guibg=none ctermbg=none guifg=black ctermfg=black gui=bold cterm=bold
@@ -196,21 +220,22 @@ function! CustomizeTheme(theme)
     " hi TabLine guibg=none ctermbg=242 guifg=253 ctermfg=253 gui=none cterm=none
     " hi TabLine guibg=#555555 ctermbg=none guifg=#999999 ctermfg=253 gui=none cterm=none
     hi VertSplit guibg=none guifg=#eeeeee ctermbg=none ctermfg=none
-    highlight EndOfBuffer guifg=white guibg=white
 
     hi Beacon guibg=#aaaaee
 
+    hi TabLine guibg=none guifg=#aa88ee gui=bold
+    hi TabLineFill guibg=none ctermbg=none guifg=253 ctermfg=253 gui=bold cterm=bold
     hi TabLineSel guibg=#442288 guifg=#aa88ee gui=bold
     hi TabLineFileSel guibg=#442288 guifg=#ffffff gui=bold
     hi TabLineDirSel guibg=#442288 guifg=#aa88ee gui=bold
-    hi TabLineFile guibg=default guifg=#aaaaee gui=bold
-    hi TabLineDir guibg=default guifg=#8888bb gui=bold
+    hi TabLineFile guibg=none guifg=#aaaaee gui=bold
+    hi TabLineDir guibg=none guifg=#8888bb gui=bold
 
     hi MatchParen guibg=#eeeeee ctermbg=254 guifg=#777777 ctermfg=black
     hi Search guibg=#FECB32 guifg=none gui=bold ctermbg=221 cterm=bold
 
-    hi StatusLine guibg=#eeeeee guifg=#777777
-    hi StatusLineNC guibg=#eeeeee guifg=#dddddd
+    hi StatusLine guibg=none guifg=#777777
+    hi StatusLineNC guibg=none guifg=#dddddd
 
     hi Comment guibg=NONE guifg=#aaaaaa ctermfg=248 ctermbg=NONE gui=none
 
@@ -284,21 +309,20 @@ nnoremap y "*y
 nnoremap Y y$
 nnoremap gb <C-^>
 nnoremap gt <C-w>gf:NERDTreeMirror<CR><C-w><C-w>
-nnoremap <C-i> <C-o>
-nnoremap <C-o> <C-i>
 nnoremap <S-Tab> o
 inoremap <S-Tab> <C-d>
 " nmap <leader>i :echo expand('%:p:h') . "/"<CR>
 nnoremap <leader>k :noh<return><esc>
-nnoremap <leader>p :e $MYVIMRC<CR>
+nnoremap <leader>pp :e $MYVIMRC<CR>
+nnoremap <leader>pr :call SetTheme()<CR>
 nnoremap <leader>v :Lines MARK: \| TODO: \| FIXME: <CR>
 " nnoremap <leader>v :source $MYVIMRC<CR>:LightlineReload<CR>
 " nnoremap <leader>v :source $MYVIMRC<CR>:LightlineReload<CR>
-nnoremap <leader>q :q<CR>
+nnoremap <leader>q :call QuitBuffer()<CR>
 nnoremap <leader>s :w<CR>
 nnoremap <leader>e :edit /<left>
 nnoremap <leader>r :%s///g<left><left><left>
-nnoremap <leader>c :lcd %:p:h<CR>
+" nnoremap <leader>c :lcd %:p:h<CR>
 vnoremap <C-r> "hy:%s/<C-r>h//gc<left><left><left>
 
 " Git
@@ -367,8 +391,8 @@ xnoremap <expr> p 'pgv"'.v:register.'y`>'
 " ================================================================================ "
 "                                    MARK: SETTINGS                                   "
 " ================================================================================ "
+
 if has("autocmd")
-  autocmd ColorScheme * call SetTheme(myTheme)
   autocmd filetype crontab setlocal nobackup nowritebackup
   " set filetypes as typescript.tsx
   autocmd BufNewFile,BufRead *.js,*.ts,*.tsx,*.jsx set filetype=typescript.tsx
@@ -773,6 +797,12 @@ nnoremap <leader>od :CocFzfList diagnostics<CR>
 nnoremap <leader>os :CocFzfList symbols<CR>
 nnoremap <leader>of :CocFzfList symbols --kind Function<CR>
 nnoremap <leader>oa :CocFzfList actions<CR>
+
+" Code correction
+nnoremap <leader>cc :CocAction<CR>
+nnoremap <leader>ca :CocCommand tsserver.executeAutofix<CR>
+nnoremap <leader>ci :CocCommand tsserver.organizeImports<CR>
+
 " nnoremap <leader>oto :FloatermNew<CR>
 " nnoremap tn :FloatermNext<CR>
 " nnoremap tp :FloatermPrev<CR>
@@ -856,7 +886,7 @@ let g:wordmotion_mappings = {
 \ }
 
 " MARK: plugin nerd
-nmap <leader>, :NERDTreeFind<CR>
+nmap <leader>, :call FindInNERDTreeIfOpen()<CR>
 let NERDTreeDirArrowExpandable="\u00a0"
 let NERDTreeDirArrowCollapsible="\u00a0"
 let NERDTreeNodeDelimiter="\u00b7"
@@ -864,16 +894,32 @@ let NERDTreeAutoCenter=0
 let NERDTreeAutoDeleteBuffer=1
 let NERDTreeQuitOnOpen=0
 let NERDTreeMinimalUI=1
-let NERDTreeWinSize=40
+let NERDTreeWinSize=30
 let NERDTreeRespectWildIgnore=1
+" let NERDTreeMapOpenInTab='\t'
 " Autostart nerdtree
 autocmd StdinReadPre * let s:std_in=1
 autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
-" Autoquit nerdtree if the only one
-autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+function! FindInNERDTreeIfOpen()
+  if IsNERDTreeOpen()
+    :NERDTreeFind
+  else
+    :NERDTreeMirror
+  endif
+endfunction
 " Follow mode
 function! IsNERDTreeOpen()
   return exists("t:NERDTreeBufName") && (bufwinnr(t:NERDTreeBufName) != -1)
+endfunction
+function! QuitBuffer()
+  " do not quit if on nerd tree
+  if bufname('') == "NERD_tree_1"
+    return
+  endif
+  :q
+  if bufname('') == "NERD_tree_1"
+    :q
+  endif
 endfunction
 function! SyncTree()
   if &modifiable && IsNERDTreeOpen() && strlen(expand('%')) > 0 && !&diff
@@ -885,9 +931,20 @@ endfunction
 autocmd BufEnter * call SyncTree()
 " Never open files in nerdtree
 autocmd FileType nerdtree let t:nerdtree_winnr = bufwinnr('%')
+autocmd TabLeave * call DefocusNERDTree()
 autocmd BufWinEnter * call PreventBuffersInNERDTree()
 
+function! DefocusNERDTree()
+  if exists('t:nerdtree_winnr') && bufwinnr('%') == t:nerdtree_winnr
+    wincmd w
+  endif
+endfunction
+
 function! PreventBuffersInNERDTree()
+  if IsNERDTreeOpen() == 0
+    :NERDTreeMirror
+  endif
+
   if bufname('#') =~ 'NERD_tree' && bufname('%') !~ 'NERD_tree'
     \ && exists('t:nerdtree_winnr') && bufwinnr('%') == t:nerdtree_winnr
     \ && &buftype == '' && !exists('g:launching_fzf')
@@ -904,7 +961,7 @@ let g:WebDevIconsUnicodeDecorateFolderNodes = 1
 let g:DevIconsEnableFoldersOpenClose = 1
 
 " MARK: NERDtree git indicators
-let g:NERDTreeIndicatorMapCustom = {
+let g:NERDTreeGitStatusIndicatorMapCustom = {
     \ "Modified"  : "*",
     \ "Staged"    : "✚",
     \ "Untracked" : "*",
@@ -1002,7 +1059,15 @@ if !exists('*ReloadVim')
 endif
 command! Reload :call ReloadVim()
 
+" MARK: coc-prettier
+command! -nargs=0 Prettier :CocCommand prettier.formatFile
+
 " MARK: macros
 let @c="oconsole.error('#DEBUG#');\<Esc>hhi"
 
-call SetTheme(myTheme)
+" Will run every 10 minutes to update theme to match macOs theme
+function! AutoDarkModeSetup()
+  let timer = timer_start(600000, 'SetThemeWithTimer', {'repeat': -1})
+  call SetThemeWithTimer(timer)
+endfunction
+call AutoDarkModeSetup()
