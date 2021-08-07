@@ -1,8 +1,16 @@
 .config/nvim/plugins
+.config/nvim/plugin/
 .config/.mono/
 .config/NuGet/
 .config/configstore/
 .config/nvim/.netrwhist
 .config/nvim/autoload/
 .config/xbuild/
+.config/coc/
+.config/iterm2/
+.config/darktable/
+.config/pgcli/
+.config/PureRef*
+.config/Unreal Engine/
+.config/broot/launcher/
 .DS_STORE

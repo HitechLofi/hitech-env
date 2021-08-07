@@ -12,6 +12,7 @@
     "UltiSnips",
     "~/Documents/Snippets"
   ],
+  "rust-analyzer.server.path": "/usr/local/bin/rust-analyzer",
   "diagnostic.enableMessage": "never",
   "diagnostic.errorSign": "💩",
   "diagnostic.warningSign": "🤔",
