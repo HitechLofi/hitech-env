@@ -60,6 +60,11 @@ require('packer').startup(function()
   use {'lewis6991/gitsigns.nvim', requires = {'nvim-lua/plenary.nvim'} }
   use 'neovim/nvim-lspconfig'        -- Collection of configurations for built-in LSP client
   use 'hrsh7th/nvim-compe'           -- Autocompletion plugin
+  use {
+    'kyazdani42/nvim-tree.lua',
+    requires = 'kyazdani42/nvim-web-devicons'
+  }
+  use {'akinsho/nvim-bufferline.lua', requires = 'kyazdani42/nvim-web-devicons'}
 
   use 'simrat39/rust-tools.nvim'
 end)
@@ -140,6 +145,10 @@ SetTheme = function()
     hi Group guibg=none
     hi Error guibg=#ed1b04 guifg=#ffe1dd
     hi Warning guibg=#ffe100 guifg=#1c1c1c
+    hi NvimTreeFolderIcon guifg=#3474eb
+    hi NvimTreeFolderName guifg=#3474eb
+    hi NvimTreeOpenedFolderName guifg=#9c34eb
+    hi NvimTreeOpenedFile guifg=#9c34eb
     hi FloatermBorder guibg=none guifg=#555555
     hi htmlArg gui=italic
   endfunction
@@ -166,6 +175,28 @@ end
 
 if isModuleAvailable('feline') then
   require('feline-config')
+end
+
+if isModuleAvailable('bufferline') then
+  require("bufferline").setup {
+    options = {
+      diagnostics = "nvim_lsp",
+      diagnostics_indicator = function(count, level, diagnostics_dict, context)
+        local s = " "
+        for e, n in pairs(diagnostics_dict) do
+          local sym = e == "error" and " "
+          or (e == "warning" and " " or "" )
+          s = s .. n .. sym
+        end
+        return s
+      end,
+      offsets = {{filetype = "NvimTree", text = "like tears in the rain...", text_align = "center"}},
+      show_close_icon = false,
+      show_buffer_close_icons = false
+    }
+  }
+  vim.api.nvim_set_keymap('n', '[b', '<cmd>BufferLineCyclePrev<cr>', {noremap = true})
+  vim.api.nvim_set_keymap('n', ']b', '<cmd>BufferLineCycleNext<cr>', {noremap = true})
 end
 
 if isModuleAvailable('lsp-colors') then
@@ -236,16 +267,34 @@ if isModuleAvailable('rust-tools') then
     -- all the opts to send to nvim-lspconfig
     -- these override the defaults set by rust-tools.nvim
     -- see https://github.com/neovim/nvim-lspconfig/blob/master/CONFIG.md#rust_analyzer
-    server = {}, -- rust-analyer options
+    server = {}, -- rust-analyzer options
   }
 
   require('rust-tools').setup(opts)
 end
 
+-- Neovide settings
+vim.g.neovide_refresh_rate = 240
+vim.g.neovide_remember_window_size = true
+vim.g.neovide_cursor_vfx_mode = "pixiedust"
+vim.o.guifont = "FiraCodeRetinaMedium NF:h14"
+
 -- Floating terminal (floaterm)
 vim.g.floaterm_opener = "edit"
 vim.g.floaterm_borderchars = "─│─│╭╮╯╰"
 vim.g.floaterm_title = ":::::T3RM1NAL::::: ($1|$2)"
+
+-- Nvim Tree
+vim.g.nvim_tree_gitignore = 1
+vim.g.nvim_tree_auto_open = 1
+vim.g.nvim_tree_ignore = {'.git', 'node_modules', '.cache'}
+vim.g.nvim_tree_auto_close = 1
+vim.g.nvim_tree_follow = 1
+vim.g.nvim_tree_tab_open = 1
+vim.g.nvim_tree_lsp_diagnostics = 1
+vim.g.nvim_tree_highlight_opened_files = 0
+vim.g.nvim_tree_git_hl = 1
+vim.g.nvim_tree_hijack_cursor = 1
 
 --Incremental live completion
 vim.o.inccommand = "nosplit"
@@ -315,9 +364,9 @@ vim.api.nvim_set_keymap('n', '<C-u>', '4k', {noremap = true})
 
 vim.api.nvim_set_keymap('n', '<leader>k', ':noh<return><esc>', {noremap = true})
 vim.api.nvim_set_keymap('n', '<leader>p', ':e $MYVIMRC<CR>', {noremap = true})
-vim.api.nvim_set_keymap('n', '<leader>q', ':q<CR>', {noremap = true})
+vim.api.nvim_set_keymap('n', '<leader>q', ':w<CR>:BufferLineCycleNext<CR>:bd #<CR>', {noremap = true})
 vim.api.nvim_set_keymap('n', '<leader>s', ':w<CR>', {noremap = true})
-vim.api.nvim_set_keymap('n', '<leader>t', ':tabnew<CR>', {noremap = true})
+vim.api.nvim_set_keymap('n', '<leader>t', ':BufferLinePick<CR>', {noremap = true})
 vim.api.nvim_set_keymap('n', '<leader>1', ':tabn1<CR>', {noremap = true})
 vim.api.nvim_set_keymap('n', '<leader>2', ':tabn2<CR>', {noremap = true})
 vim.api.nvim_set_keymap('n', '<leader>3', ':tabn3<CR>', {noremap = true})
@@ -349,9 +398,6 @@ vim.api.nvim_set_keymap('n', 'Diw', '"_Diw', {noremap = true})
 vim.api.nvim_set_keymap('n', 'ciw', '"_ciw', {noremap = true})
 vim.api.nvim_set_keymap('v', 'ciw', '"_ciw', {noremap = true})
 vim.api.nvim_set_keymap('n', 'Ciw', '"_Ciw', {noremap = true})
-
---Remap escape to leave terminal mode
--- vim.api.nvim_set_keymap('t', '<Esc>', [[<c-\><c-n>]], {noremap = true})
 
 --Add map to enter paste mode
 vim.o.pastetoggle="<F3>"
@@ -389,6 +435,7 @@ if isModuleAvailable('telescope') then
           ["<C-d>"] = false,
         },
       },
+      file_ignore_patterns = { "node_modules", ".git", "dist" },
       layout_strategy = "vertical",
       layout_config = {
         horizontal = {
@@ -449,16 +496,15 @@ if isModuleAvailable('gitsigns') then
     status_formatter = nil, -- Use default
     word_diff = false,
     use_decoration_api = true,
-    use_internal_diff = true,  -- If luajit is present
+    use_internal_diff = false,  -- If luajit is present (false for windows)
   }
 end
 
 --Add leader shortcuts
 vim.api.nvim_set_keymap('n', '<leader><space>', [[<cmd>lua require('telescope.builtin').find_files()<cr>]], { noremap = true, silent = true})
-vim.api.nvim_set_keymap('n', '<leader>o', [[<cmd>FloatermNew --width=0.7 --height=0.9 broot<cr>]], { noremap = true })
--- vim.api.nvim_set_keymap('n', '<leader>b', [[<cmd>lua require('telescope.builtin').buffers()<cr>]], { noremap = true, silent = true})
+vim.api.nvim_set_keymap('n', '<leader>b', [[<cmd>lua require('telescope.builtin').buffers()<cr>]], { noremap = true, silent = true})
 vim.api.nvim_set_keymap('n', '<leader>l', [[<cmd>lua require('telescope.builtin').current_buffer_fuzzy_find()<cr>]], { noremap = true, silent = true})
-vim.api.nvim_set_keymap('n', '<leader>b', [[<cmd>lua require('telescope.builtin').oldfiles()<cr>]], { noremap = true, silent = true})
+vim.api.nvim_set_keymap('n', '<leader>v', [[<cmd>lua require('telescope.builtin').oldfiles()<cr>]], { noremap = true, silent = true})
 -- vim.api.nvim_set_keymap('n', '<leader>sd', [[<cmd>lua require('telescope.builtin').grep_string()<cr>]], { noremap = true, silent = true})
 vim.api.nvim_set_keymap('n', '<leader>f', [[<cmd>lua require('telescope.builtin').live_grep()<cr>]], { noremap = true, silent = true})
 vim.api.nvim_set_keymap('n', '<leader>gc', [[<cmd>lua require('telescope.builtin').git_commits()<cr>]], { noremap = true, silent = true})
