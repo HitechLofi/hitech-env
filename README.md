@@ -1,15 +1,21 @@
 # 👾 HI TECH ENVIRONMENT 👾
-## Programs to install
-### Windows Only
-- chocolatey
-- nextgen reader
-- mytube
+
+## Config
+- neovim -> .config/nvim
+- kitty -> .config/kitty
+- git -> .gitconfig
+- tmux -> .tmux.conf
+- shell -> .bash_aliases
+- vscode -> vs-code/
+
+## Windows Software
+- scoop
 - powertoys
 - shareX
 - wallpaper engine
 
-### Multiplatform
-- vscode
+## Multiplatform Software
+- neovide
 - fzf
 - ripgrep
 - bat
