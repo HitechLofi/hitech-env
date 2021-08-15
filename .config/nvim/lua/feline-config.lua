@@ -41,7 +41,7 @@ properties.force_inactive.buftypes = {
 }
 
 components.left.active[1] = {
-  provider = '',
+  provider = ' ',
   hl = {
     fg = 'subtlegray',
     bg = 'white'
@@ -209,7 +209,7 @@ components.right.active[6] = {
 }
 
 components.right.active[7] = {
-  provider = '',
+  provider = ' ',
   hl = {
     fg = 'subtlegray',
     bg = 'white'

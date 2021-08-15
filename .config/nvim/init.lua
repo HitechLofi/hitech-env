@@ -60,87 +60,13 @@ require('packer').startup(function()
   use {'lewis6991/gitsigns.nvim', requires = {'nvim-lua/plenary.nvim'} }
   use 'neovim/nvim-lspconfig'        -- Collection of configurations for built-in LSP client
   use 'hrsh7th/nvim-compe'           -- Autocompletion plugin
-  use {
-    'kyazdani42/nvim-tree.lua',
-    requires = 'kyazdani42/nvim-web-devicons'
-  }
-  use {'akinsho/nvim-bufferline.lua', requires = 'kyazdani42/nvim-web-devicons'}
 
   use 'simrat39/rust-tools.nvim'
 end)
 
 SetTheme = function()
-  if theme == 'dark' then
-    vim.api.nvim_exec([[
-    function UpdateDarkThemeColors()
-      set background=dark
-      colorscheme Parapluie
-
-      hi Normal guifg=#FFFFFF guibg=none
-      hi Special guibg=none guifg=#FFFFFF
-      hi NonText guifg=#575757 guibg=none
-      hi MatchParen guibg=#323232 guifg=#888888
-      hi Search guibg=#7B00D2 guifg=none gui=bold
-      hi TabLine guibg=#333333 guifg=#aa88ee gui=bold
-      hi TabLineSel guibg=#442288 guifg=#aa88ee gui=bold
-      hi StatusLine guibg=NONE guifg=#777777 gui=none
-      hi StatusLineNC guibg=NONE guifg=#333333 gui=none
-      hi VertSplit guibg=none guifg=#333333
-      hi Comment guibg=NONE guifg=#7777aa gui=none
-      hi SignColumn guibg=none
-      hi CursorLineNr guifg=#333333 guibg=none
-      hi CursorLine guibg=none guifg=#FFFFFF gui=bold
-      hi LineNr guibg=none guifg=#333355
-      hi Whitespace guibg=none guifg=#444455
-      hi IndentBlanklineChar guibg=none guifg=#444466 gui=nocombine
-      hi GitGutterAdd guibg=none guifg=#89E455
-      hi GitGutterChange guibg=none guifg=#0CA8FC
-      hi GitGutterDelete guibg=none guifg=#FB263F
-      hi GitGutterChangeDelete guibg=none guifg=#0CA8FC
-      highlight TrailingSpace guibg=#424242 guifg=#ffffff
-      call matchadd('TrailingSpace', '\s\+$', 80)
-    endfunction
-    au VimEnter * call UpdateDarkThemeColors()
-    ]], false)
-  else
-    vim.api.nvim_exec([[
-    function UpdateLightThemeColors()
-      set background=light
-      colorscheme Parasol
-
-      hi Normal guibg=none guifg=#000000
-      hi Special guibg=none guifg=#000000
-      hi NonText guifg=#BBBBBB guibg=none
-      hi EndOfBuffer guifg=#bbbbbb guibg=none
-      hi BookmarkLine guibg=158 guibg=none
-      hi BookmarkSign guibg=none guifg=black
-      hi VertSplit guibg=none guifg=#eeeeee
-      hi IndentBlanklineChar guibg=none guifg=#aaaaaa gui=nocombine
-      hi Beacon guibg=#aaaaee
-      hi TabLine guibg=none guifg=#aa88ee gui=bold
-      hi TabLineSel guibg=#442288 guifg=#aa88ee gui=bold
-      hi MatchParen guibg=#eeeeee guifg=#777777
-      hi Search guibg=#FECB32 guifg=none gui=bold
-      hi StatusLine guibg=none guifg=#777777
-      hi StatusLineNC guibg=none guifg=#dddddd
-      hi Comment guibg=NONE guifg=#aaaaaa gui=none
-      hi SignColumn guibg=none
-      hi CursorLineNr guibg=#123123
-      hi CursorLine guibg=none guifg=#000000 gui=bold
-      hi LineNr guibg=none guifg=#aaaaaa
-      hi GitGutterAdd guibg=#baf49c guifg=#3a990a
-      hi GitGutterChange guibg=#b5dafc guifg=#0CA8FC
-      hi Whitespace guibg=none guifg=#eeeeee
-      hi GitGutterDelete guibg=#f7b4be guifg=#e0081e
-      hi GitGutterChangeDelete guibg=#b5dafc guifg=#0CA8FC
-      highlight TrailingSpace guibg=#eeeeee guifg=#888888
-      call matchadd('TrailingSpace', '\s\+$', 80)
-    endfunction
-    au VimEnter * call UpdateLightThemeColors()
-    ]], false)
-  end
   vim.api.nvim_exec([[
-  function UpdateSharedThemeColors()
+  function! SetSharedThemeColors()
     hi Constant guibg=none guifg=#0CA8FC
     hi Group guibg=none
     hi Error guibg=#ed1b04 guifg=#ffe1dd
@@ -152,8 +78,83 @@ SetTheme = function()
     hi FloatermBorder guibg=none guifg=#555555
     hi htmlArg gui=italic
   endfunction
-  au VimEnter * call UpdateSharedThemeColors()
+
+  function! UseDarkThemeColors()
+    set background=dark
+    colorscheme Parapluie
+
+    hi Normal guifg=#FFFFFF guibg=none
+    hi Special guibg=none guifg=#FFFFFF
+    hi NonText guifg=#575757 guibg=none
+    hi MatchParen guibg=#323232 guifg=#888888
+    hi Search guibg=#7B00D2 guifg=none gui=bold
+    hi TabLine guibg=#333333 guifg=#aa88ee gui=bold
+    hi TabLineSel guibg=#442288 guifg=#aa88ee gui=bold
+    hi StatusLine guibg=NONE guifg=#777777 gui=none
+    hi StatusLineNC guibg=NONE guifg=#333333 gui=none
+    hi VertSplit guibg=none guifg=#333333
+    hi Comment guibg=NONE guifg=#7777aa gui=none
+    hi SignColumn guibg=none
+    hi CursorLineNr guifg=#333333 guibg=none
+    hi CursorLine guibg=none guifg=#FFFFFF gui=bold
+    hi LineNr guibg=none guifg=#333355
+    hi Whitespace guibg=none guifg=#444455
+    hi IndentBlanklineChar guibg=none guifg=#444466 gui=nocombine
+    hi GitGutterAdd guibg=none guifg=#89E455
+    hi GitGutterChange guibg=none guifg=#0CA8FC
+    hi GitGutterDelete guibg=none guifg=#FB263F
+    hi GitGutterChangeDelete guibg=none guifg=#0CA8FC
+    hi TrailingSpace guibg=#424242 guifg=#ffffff
+
+    call matchadd('TrailingSpace', '\s\+$', 80)
+    call SetSharedThemeColors()
+  endfunction
+
+  function! UseLightThemeColors()
+    set background=light
+    colorscheme Parasol
+
+    hi Normal guibg=none guifg=#000000
+    hi Special guibg=none guifg=#000000
+    hi NonText guifg=#BBBBBB guibg=none
+    hi EndOfBuffer guifg=#bbbbbb guibg=none
+    hi BookmarkLine guibg=158 guibg=none
+    hi BookmarkSign guibg=none guifg=black
+    hi VertSplit guibg=none guifg=#eeeeee
+    hi IndentBlanklineChar guibg=none guifg=#aaaaaa gui=nocombine
+    hi Beacon guibg=#aaaaee
+    hi TabLine guibg=none guifg=#aa88ee gui=bold
+    hi TabLineSel guibg=#442288 guifg=#aa88ee gui=bold
+    hi MatchParen guibg=#eeeeee guifg=#777777
+    hi Search guibg=#FECB32 guifg=none gui=bold
+    hi StatusLine guibg=none guifg=#777777
+    hi StatusLineNC guibg=none guifg=#dddddd
+    hi Comment guibg=NONE guifg=#aaaaaa gui=none
+    hi SignColumn guibg=none
+    hi CursorLineNr guibg=#123123
+    hi CursorLine guibg=none guifg=#000000 gui=bold
+    hi LineNr guibg=none guifg=#aaaaaa
+    hi GitGutterAdd guibg=#baf49c guifg=#3a990a
+    hi GitGutterChange guibg=#b5dafc guifg=#0CA8FC
+    hi Whitespace guibg=none guifg=#eeeeee
+    hi GitGutterDelete guibg=#f7b4be guifg=#e0081e
+    hi GitGutterChangeDelete guibg=#b5dafc guifg=#0CA8FC
+    hi TrailingSpace guibg=#eeeeee guifg=#888888
+
+    call matchadd('TrailingSpace', '\s\+$', 80)
+    call SetSharedThemeColors()
+  endfunction
   ]], false)
+
+  if theme == 'dark' then
+    vim.api.nvim_exec([[
+      au VimEnter * call UseDarkThemeColors()
+    ]], false)
+  else
+    vim.api.nvim_exec([[
+      au VimEnter * call UseLightThemeColors()
+    ]], false)
+  end
 end
 
 SetTheme()
@@ -175,28 +176,6 @@ end
 
 if isModuleAvailable('feline') then
   require('feline-config')
-end
-
-if isModuleAvailable('bufferline') then
-  require("bufferline").setup {
-    options = {
-      diagnostics = "nvim_lsp",
-      diagnostics_indicator = function(count, level, diagnostics_dict, context)
-        local s = " "
-        for e, n in pairs(diagnostics_dict) do
-          local sym = e == "error" and " "
-          or (e == "warning" and " " or "" )
-          s = s .. n .. sym
-        end
-        return s
-      end,
-      offsets = {{filetype = "NvimTree", text = "like tears in the rain...", text_align = "center"}},
-      show_close_icon = false,
-      show_buffer_close_icons = false
-    }
-  }
-  vim.api.nvim_set_keymap('n', '[b', '<cmd>BufferLineCyclePrev<cr>', {noremap = true})
-  vim.api.nvim_set_keymap('n', ']b', '<cmd>BufferLineCycleNext<cr>', {noremap = true})
 end
 
 if isModuleAvailable('lsp-colors') then
@@ -277,24 +256,12 @@ end
 vim.g.neovide_refresh_rate = 240
 vim.g.neovide_remember_window_size = true
 vim.g.neovide_cursor_vfx_mode = "pixiedust"
-vim.o.guifont = "FiraCodeRetinaMedium NF:h14"
+vim.o.guifont = "FiraCodeRetinaMedium NF:h13"
 
 -- Floating terminal (floaterm)
 vim.g.floaterm_opener = "edit"
 vim.g.floaterm_borderchars = "─│─│╭╮╯╰"
 vim.g.floaterm_title = ":::::T3RM1NAL::::: ($1|$2)"
-
--- Nvim Tree
-vim.g.nvim_tree_gitignore = 1
-vim.g.nvim_tree_auto_open = 1
-vim.g.nvim_tree_ignore = {'.git', 'node_modules', '.cache'}
-vim.g.nvim_tree_auto_close = 1
-vim.g.nvim_tree_follow = 1
-vim.g.nvim_tree_tab_open = 1
-vim.g.nvim_tree_lsp_diagnostics = 1
-vim.g.nvim_tree_highlight_opened_files = 0
-vim.g.nvim_tree_git_hl = 1
-vim.g.nvim_tree_hijack_cursor = 1
 
 --Incremental live completion
 vim.o.inccommand = "nosplit"
@@ -315,11 +282,19 @@ vim.o.mouse = "a"
 --Enable break indent
 vim.o.breakindent = true
 
+--For windows set the terminal to powershell
+vim.cmd[[set shell=powershell.exe]]
+
 --Save undo history
 vim.cmd[[set undofile]]
 
 --clipboard
 vim.cmd[[set clipboard=unnamed,unnamedplus]]
+
+vim.cmd[[
+  set guioptions-=e " Use showtabline in gui vim
+  set sessionoptions+=tabpages,globals " store tabpages and globals in session
+]]
 
 --misc
 
@@ -343,6 +318,8 @@ vim.g.maplocalleader = " "
 vim.api.nvim_set_keymap('n', 'k', "v:count == 0 ? 'gk' : 'k'", { noremap=true, expr = true, silent = true})
 vim.api.nvim_set_keymap('n', 'j', "v:count == 0 ? 'gj' : 'j'", {noremap= true, expr = true, silent = true})
 
+vim.api.nvim_set_keymap('t', '<Esc>', [[<C-\><C-n>]], {noremap= true})
+
 -- My custom binds
 vim.api.nvim_set_keymap('i', '<c-l>', '<Esc>la', {noremap = true})
 vim.api.nvim_set_keymap('i', '<c-h>', '<Esc>ha', {noremap = true})
@@ -357,16 +334,16 @@ vim.api.nvim_set_keymap('n', '^', '0', {noremap = true})
 vim.api.nvim_set_keymap('n', '-', '$', {noremap = true})
 
 vim.api.nvim_set_keymap('n', 'zm', 'zz', {noremap = true})
-vim.api.nvim_set_keymap('n', 'zz', 'zt4k4j', {noremap = true})
-vim.api.nvim_set_keymap('n', 'zb', 'zb4j4k', {noremap = true})
+vim.api.nvim_set_keymap('n', 'zz', 'zt7k7j', {noremap = true})
+vim.api.nvim_set_keymap('n', 'zb', 'zb7j7k', {noremap = true})
 vim.api.nvim_set_keymap('n', '<C-d>', '4j', {noremap = true})
 vim.api.nvim_set_keymap('n', '<C-u>', '4k', {noremap = true})
 
 vim.api.nvim_set_keymap('n', '<leader>k', ':noh<return><esc>', {noremap = true})
 vim.api.nvim_set_keymap('n', '<leader>p', ':e $MYVIMRC<CR>', {noremap = true})
-vim.api.nvim_set_keymap('n', '<leader>q', ':w<CR>:BufferLineCycleNext<CR>:bd #<CR>', {noremap = true})
+vim.api.nvim_set_keymap('n', '<leader>q', ':q<CR>', {noremap = true})
 vim.api.nvim_set_keymap('n', '<leader>s', ':w<CR>', {noremap = true})
-vim.api.nvim_set_keymap('n', '<leader>t', ':BufferLinePick<CR>', {noremap = true})
+vim.api.nvim_set_keymap('n', '<leader>t', ':tabnew<CR>', {noremap = true})
 vim.api.nvim_set_keymap('n', '<leader>1', ':tabn1<CR>', {noremap = true})
 vim.api.nvim_set_keymap('n', '<leader>2', ':tabn2<CR>', {noremap = true})
 vim.api.nvim_set_keymap('n', '<leader>3', ':tabn3<CR>', {noremap = true})
@@ -468,17 +445,17 @@ if isModuleAvailable('gitsigns') then
       noremap = true,
       buffer = true,
 
-      ['n ]c'] = { expr = true, "&diff ? ']c' : '<cmd>lua require\"gitsigns.actions\".next_hunk()<CR>'"},
-      ['n [c'] = { expr = true, "&diff ? '[c' : '<cmd>lua require\"gitsigns.actions\".prev_hunk()<CR>'"},
+      ['n gn'] = { expr = true, "&diff ? 'gn' : '<cmd>lua require\"gitsigns.actions\".next_hunk()<CR>'"},
+      ['n gp'] = { expr = true, "&diff ? 'gp' : '<cmd>lua require\"gitsigns.actions\".prev_hunk()<CR>'"},
 
-      ['n <leader>hs'] = '<cmd>lua require"gitsigns".stage_hunk()<CR>',
-      ['v <leader>hs'] = '<cmd>lua require"gitsigns".stage_hunk({vim.fn.line("."), vim.fn.line("v")})<CR>',
-      ['n <leader>hu'] = '<cmd>lua require"gitsigns".undo_stage_hunk()<CR>',
-      ['n <leader>hr'] = '<cmd>lua require"gitsigns".reset_hunk()<CR>',
-      ['v <leader>hr'] = '<cmd>lua require"gitsigns".reset_hunk({vim.fn.line("."), vim.fn.line("v")})<CR>',
-      ['n <leader>hR'] = '<cmd>lua require"gitsigns".reset_buffer()<CR>',
-      ['n <leader>hp'] = '<cmd>lua require"gitsigns".preview_hunk()<CR>',
-      ['n <leader>hb'] = '<cmd>lua require"gitsigns".blame_line(true)<CR>',
+      ['n <leader>gs'] = '<cmd>lua require"gitsigns".stage_hunk()<CR>',
+      ['v <leader>gs'] = '<cmd>lua require"gitsigns".stage_hunk({vim.fn.line("."), vim.fn.line("v")})<CR>',
+      ['n <leader>gu'] = '<cmd>lua require"gitsigns".undo_stage_hunk()<CR>',
+      ['n <leader>gr'] = '<cmd>lua require"gitsigns".reset_hunk()<CR>',
+      ['v <leader>gr'] = '<cmd>lua require"gitsigns".reset_hunk({vim.fn.line("."), vim.fn.line("v")})<CR>',
+      ['n <leader>gR'] = '<cmd>lua require"gitsigns".reset_buffer()<CR>',
+      ['n <leader>gp'] = '<cmd>lua require"gitsigns".preview_hunk()<CR>',
+      ['n <leader>gi'] = '<cmd>lua require"gitsigns".blame_line(true)<CR>',
 
       -- Text objects
       ['o ih'] = ':<C-U>lua require"gitsigns.actions".select_hunk()<CR>',
@@ -503,13 +480,14 @@ end
 --Add leader shortcuts
 vim.api.nvim_set_keymap('n', '<leader><space>', [[<cmd>lua require('telescope.builtin').find_files()<cr>]], { noremap = true, silent = true})
 vim.api.nvim_set_keymap('n', '<leader>b', [[<cmd>lua require('telescope.builtin').buffers()<cr>]], { noremap = true, silent = true})
+vim.api.nvim_set_keymap('n', '<leader>o', [[<cmd>e %:h<cr>]], { noremap = true, silent = true})
 vim.api.nvim_set_keymap('n', '<leader>l', [[<cmd>lua require('telescope.builtin').current_buffer_fuzzy_find()<cr>]], { noremap = true, silent = true})
 vim.api.nvim_set_keymap('n', '<leader>v', [[<cmd>lua require('telescope.builtin').oldfiles()<cr>]], { noremap = true, silent = true})
 -- vim.api.nvim_set_keymap('n', '<leader>sd', [[<cmd>lua require('telescope.builtin').grep_string()<cr>]], { noremap = true, silent = true})
 vim.api.nvim_set_keymap('n', '<leader>f', [[<cmd>lua require('telescope.builtin').live_grep()<cr>]], { noremap = true, silent = true})
 vim.api.nvim_set_keymap('n', '<leader>gc', [[<cmd>lua require('telescope.builtin').git_commits()<cr>]], { noremap = true, silent = true})
 vim.api.nvim_set_keymap('n', '<leader>gb', [[<cmd>lua require('telescope.builtin').git_branches()<cr>]], { noremap = true, silent = true})
-vim.api.nvim_set_keymap('n', '<leader>gs', [[<cmd>lua require('telescope.builtin').git_status()<cr>]], { noremap = true, silent = true})
+vim.api.nvim_set_keymap('n', '<leader>gg', [[<cmd>lua require('telescope.builtin').git_status()<cr>]], { noremap = true, silent = true})
 vim.api.nvim_set_keymap('n', '<leader>gC', [[<cmd>lua require('telescope.builtin').git_bcommits()<cr>]], { noremap = true, silent = true})
 
 -- Change preview window location
@@ -570,8 +548,8 @@ local on_attach = function(_client, bufnr)
   vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
   vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
   vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>e', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', opts)
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', '[d', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>', opts)
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', ']d', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', opts)
+  -- vim.api.nvim_buf_set_keymap(bufnr, 'n', '[d', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>', opts)
+  vim.api.nvim_buf_set_keymap(bufnr, 'n', 'ge', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', opts)
   -- vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>q', '<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>', opts)
 end
 
