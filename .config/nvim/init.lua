@@ -83,7 +83,7 @@ SetTheme = function()
     set background=dark
     colorscheme Parapluie
 
-    hi Normal guifg=#FFFFFF guibg=none
+    hi Normal guifg=#FFFFFF guibg=#232332
     hi Special guibg=none guifg=#FFFFFF
     hi NonText guifg=#575757 guibg=none
     hi MatchParen guibg=#323232 guifg=#888888
@@ -256,7 +256,7 @@ end
 vim.g.neovide_refresh_rate = 240
 vim.g.neovide_remember_window_size = true
 vim.g.neovide_cursor_vfx_mode = "pixiedust"
-vim.o.guifont = "FiraCodeRetinaMedium NF:h13"
+vim.o.guifont = "Fira Code:h13"
 
 -- Floating terminal (floaterm)
 vim.g.floaterm_opener = "edit"

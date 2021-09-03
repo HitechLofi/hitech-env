@@ -1,0 +1,195 @@
+@namespace url("http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"); /* only needed once */
+
+/* hide icons for bookmark folders */
+#personal-bookmarks .bookmark-item[container="true"] .toolbarbutton-icon {
+ display:none!important;
+}
+:root {
+  --arrowpanel-menuitem-padding-block: 4px 8px !important;
+  --tab-block-margin: 4px 3px !important;
+}
+/* Tab: Reduce height */
+.tabbrowser-tab {
+  min-height: 24px !important;
+}
+/* Tab: Ensure tab height doesn't augment when arrowscrollbox is visible  */
+#tabbrowser-arrowscrollbox {
+  --tab-min-height: 31px !important;
+  max-height: var(--tab-min-height);
+}
+/* Tab: Attention icon */
+.tabbrowser-tab:is([image], [pinned]) > .tab-stack > .tab-content[attention]:not([selected="true"]), .tabbrowser-tab > .tab-stack > .tab-content[pinned][titlechanged]:not([selected="true"]) {
+  background-position-x: left 2px !important;
+  background-position-y: bottom 12.5px !important;
+}
+/* URLBar: Fix vertical alignment */
+#urlbar[breakout=true]:not([open="true"]) {
+	--urlbar-height: 21px !important;
+	--urlbar-toolbar-height: 24px !important;
+}
+/* URLBar: Fix URL address vertical aligment when megabar is open */
+#urlbar[breakout=true][open="true"] {
+	--urlbar-toolbar-height: 30px !important;
+}
+/* Searchbar: Ensure toolbar height doesn't augment when searchbar is visible */
+#urlbar-container,
+#search-container {
+	padding-block: 0 !important;
+}
+/* Searchbar: Make sure the min-height of the input is the same as the popup */
+#search-container {
+  min-width: 192px !important;
+}
+/* Toolbar: Reduce spacing */
+#urlbar-container {
+	--urlbar-container-height: 30px !important;
+  margin-top: 0 !important;
+}
+/* Reload Button: Fix vertical alignment */
+#reload-button {
+	margin-block-start: -2px !important;
+}
+/* Windows 10 context menu */
+@media (-moz-os-version: windows-win10) {
+  /* Context Menu: Reduce vertical space */
+  menupopup > menuitem,
+  menupopup > menu {
+    padding-block: 2px !important;
+  }
+}
+/* Remove left space of toolbar  */
+.titlebar-spacer[type="pre-tabs"] {
+    display: none !important;
+}
+/* Customize window action buttons ( Close, Min, Max ) */
+.titlebar-button {
+  margin: 4px !important;
+  margin-right: 6px !important;
+  padding: 2px !important;
+  padding-left: 8px !important;
+  padding-right: 8px !important;
+  border-radius: 4px !important;
+}
+.titlebar-button > .toolbarbutton-icon {
+	height: 8px !important;
+	min-height: 8px !important;
+	width: 8px !important;
+	min-width: 8px !important;
+}
+/* Apply dimmed background for inactive tabs */
+.tabbrowser-tab:hover>.tab-stack>.tab-background:not([selected], [multiselected]) {
+    background-color: color-mix(in srgb, currentColor 12%, transparent);
+}
+.tabbrowser-tab>.tab-stack>.tab-background:not([selected], [multiselected]) {
+    background-color: color-mix(in srgb, currentColor 6%, transparent);
+}
+/* Make all tabs small except selected one */
+.tabbrowser-tab[fadein]:not([selected]):not([pinned]) {
+    max-width: 145px !important;
+    min-width: 115px !important;
+}
+/* Selected tabs width */
+.tabbrowser-tab[selected][fadein]:not([pinned]) {
+    /*max-width: 225px !important;*/
+    min-width: 205px !important;
+}
+/* Hide tab close button */
+#TabsToolbar .close-icon {
+    display: none !important;
+}
+/* Unhide close button when it is selected tab and not pinned */
+#TabsToolbar .tabbrowser-tab[selected=true]:not([pinned]) .close-icon {
+    display: -moz-box !important;
+}
+/* Show close button even when mouse hover on inactive tabs */
+#TabsToolbar .tabbrowser-tab:not([selected="true"]):not([pinned]):hover .close-icon{
+    display: -moz-box !important;
+}
+/* Reduce spacing between pinned and regular tabs */
+#tabbrowser-tabs[haspinnedtabs]:not([positionpinnedtabs]) > #tabbrowser-arrowscrollbox > .tabbrowser-tab[first-visible-unpinned-tab] {
+    margin-inline-start: initial !important;
+}
+/* Menu items border and padding */
+menupopup > menuitem,
+menupopup > menu {
+    border-radius: 4px !important;
+    margin-left: 4px !important;
+    margin-right: 4px !important;
+}
+/* context menu top left button padding */
+menugroup > menuitem:first-child {
+    padding-left: 4px !important;
+}
+/* context menu top right button padding */
+menugroup > menuitem:last-child {
+    padding-right: 4px !important;
+}
+/* context menu top buttons radius */
+menugroup > menuitem {
+    border-radius: 4px !important;
+}
+menugroup > menuitem > hbox > image {
+    border-radius: 4px !important;
+}
+
+/* one line !!! */
+/* Hide back button only when disabled */
+#back-button[disabled="true"] { display: none !important }
+/* Hide forward button only when disabled */
+#forward-button[disabled="true"] { display: none !important }
+/* "Shield" icon */
+#tracking-protection-icon-container { display: none !important }
+/* Site information button */
+#identity-box { display: none !important }
+#TabsToolbar {
+  margin-left : 362px !important;
+}
+.titlebar-spacer { display: none !important; }
+#nav-bar {
+  margin-top: -30px !important;
+  margin-right: calc(100vw - 360px) !important;
+}
+#urlbar-container {
+  min-width   : 0px !important;
+}
+:root[uidensity="compact"] #nav-bar {
+  margin-top  : -37px !important;
+  height      : 37px !important;
+}
+:root:not([uidensity="compact"]):not([uidensity="touch"]) #nav-bar {
+  margin-top  : -44px !important;
+  height      : 44px !important;
+}
+:root[uidensity="touch"] #nav-bar {
+  margin-top  : -49px !important;
+  height      : 49px !important;
+}
+
+/* Simplifying interface */
+#nav-bar {
+  background  : none !important;
+  box-shadow  : none !important;
+}
+#navigator-toolbox {
+  border      : none !important;
+}
+.titlebar-spacer {
+  display     : none !important;
+}
+#urlbar-background {
+  border      : none !important;
+}
+#urlbar:not(:hover):not([breakout][breakout-extend]) > #urlbar-background {
+  box-shadow  : none !important;
+  background  : none !important;
+}
+.urlbar-icon, #userContext-indicator, #userContext-label {
+  fill        : transparent !important;
+  background  : transparent !important;
+  color       : transparent !important;
+}
+#urlbar:hover .urlbar-icon,
+#urlbar:active .urlbar-icon,
+#urlbar[focused] .urlbar-icon {
+  fill        : var(--toolbar-color) !important;
+}

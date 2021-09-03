@@ -1,0 +1,37 @@
+/* Hide .twisty and adjust margins so favicons have 7px on left. */
+.tab .twisty {
+  visibility: hidden;
+  margin-left: -12px;
+}
+tab-item[data-level="1"] {
+  margin-left: 14px;
+}
+/* Push tab labels slightly to the right so they're completely hidden in collapsed state */
+.tab .label {
+  margin-left: 10px;
+}
+/* Hide close buttons on tabs. */
+.tab .closebox {
+  visibility: collapse;
+}
+/* Hide 'new tab' button. */
+.newtab-button {
+  display: none;
+}
+#tabbar {
+  padding: 8px;
+}
+.tab {
+  background-color: transparent;
+  border-color: #292929;
+  color: rgba(207, 207, 207, 0.75);
+  box-shadow: none !important;
+}
+.tab:not(.active) .label {
+  opacity: 0.5;
+}
+
+/* Adjust style for tab that is muted. */
+.tab.muted {
+  opacity: 0.5;
+}
