@@ -15,7 +15,7 @@
 /* Tab: Ensure tab height doesn't augment when arrowscrollbox is visible  */
 #tabbrowser-arrowscrollbox {
   --tab-min-height: 31px !important;
-  max-height: var(--tab-min-height);
+  max-height: 31px;
 }
 /* Tab: Attention icon */
 .tabbrowser-tab:is([image], [pinned]) > .tab-stack > .tab-content[attention]:not([selected="true"]), .tabbrowser-tab > .tab-stack > .tab-content[pinned][titlechanged]:not([selected="true"]) {
@@ -105,6 +105,9 @@
 #TabsToolbar .tabbrowser-tab:not([selected="true"]):not([pinned]):hover .close-icon{
     display: -moz-box !important;
 }
+#TabsToolbar .tabbrowser-tab {
+    display: none !important;
+}
 /* Reduce spacing between pinned and regular tabs */
 #tabbrowser-tabs[haspinnedtabs]:not([positionpinnedtabs]) > #tabbrowser-arrowscrollbox > .tabbrowser-tab[first-visible-unpinned-tab] {
     margin-inline-start: initial !important;
@@ -142,12 +145,12 @@ menugroup > menuitem > hbox > image {
 /* Site information button */
 #identity-box { display: none !important }
 #TabsToolbar {
-  margin-left : 362px !important;
+  margin-left : calc(100vw - 102px) !important;
 }
 .titlebar-spacer { display: none !important; }
 #nav-bar {
   margin-top: -30px !important;
-  margin-right: calc(100vw - 360px) !important;
+  margin-right: 102px !important;
 }
 #urlbar-container {
   min-width   : 0px !important;
@@ -192,4 +195,40 @@ menugroup > menuitem > hbox > image {
 #urlbar:active .urlbar-icon,
 #urlbar[focused] .urlbar-icon {
   fill        : var(--toolbar-color) !important;
+}
+
+/* SIDEBAR */
+
+/* Sidebar min and max width removal */
+#sidebar {
+	max-width: none !important;
+	min-width: 0px !important;
+}
+/* Hide splitter, when using Tree Style Tab. */
+#sidebar-box[sidebarcommand="treestyletab_piro_sakura_ne_jp-sidebar-action"] + #sidebar-splitter {
+	display: none !important;
+}
+/* Hide sidebar header, when using Tree Style Tab. */
+#sidebar-box[sidebarcommand="treestyletab_piro_sakura_ne_jp-sidebar-action"] #sidebar-header {
+	visibility: collapse;
+}
+
+/* Shrink sidebar until hovered, when using Tree Style Tab. */
+#sidebar-box:not([sidebarcommand="treestyletab_piro_sakura_ne_jp-sidebar-action"]) {
+	min-width: 400px !important;
+	max-width: 400px !important;
+}
+#sidebar-box[sidebarcommand="treestyletab_piro_sakura_ne_jp-sidebar-action"] {
+	position: relative !important;
+	transition: all 300ms !important;
+	min-width: 48px !important;
+	max-width: 48px !important;
+}
+#sidebar-box[sidebarcommand="treestyletab_piro_sakura_ne_jp-sidebar-action"]:hover {
+	transition: all 300ms !important;
+	min-width: 400px !important;
+	max-width: 400px !important;
+
+	/* Negative right-margin to keep page from being pushed to the side. */
+	margin-right: calc((200px - 48px) * -1) !important;
 }
