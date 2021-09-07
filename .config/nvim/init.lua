@@ -1,4 +1,4 @@
-local theme = 'light'
+local theme = 'dark'
 
 -- Install packer
 local execute = vim.api.nvim_command
@@ -29,6 +29,9 @@ vim.api.nvim_exec([[
   autocmd!
   autocmd BufWritePost init.lua PackerCompile
   autocmd BufWritePre *.rs :Format
+  autocmd BufWritePre *.ts :Format
+  autocmd BufWritePre *.tsx :Format
+  autocmd BufWritePre *.js :Format
   augroup end
   autocmd FileType elm setlocal tabstop=4 shiftwidth=4 softtabstop=4
   au BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | exe "normal! g`\"" | endif
@@ -40,6 +43,9 @@ require('packer').startup(function()
   use 'tpope/vim-fugitive'           -- Git commands in nvim
   use 'tpope/vim-rhubarb'            -- Fugitive-companion to interact with github
   use 'tpope/vim-commentary'         -- "gc" to comment visual regions/lines
+
+  use 'nvim-lua/plenary.nvim'
+  use 'nvim-lua/popup.nvim'
 
   use 'folke/lsp-colors.nvim'
 
@@ -60,7 +66,11 @@ require('packer').startup(function()
   use {'lewis6991/gitsigns.nvim', requires = {'nvim-lua/plenary.nvim'} }
   use 'neovim/nvim-lspconfig'        -- Collection of configurations for built-in LSP client
   use 'hrsh7th/nvim-compe'           -- Autocompletion plugin
+  use 'ray-x/lsp_signature.nvim'
+  use 'glepnir/lspsaga.nvim'
 
+  use 'jose-elias-alvarez/nvim-lsp-ts-utils'
+  use 'jose-elias-alvarez/null-ls.nvim'
   use 'simrat39/rust-tools.nvim'
 end)
 
@@ -83,7 +93,7 @@ SetTheme = function()
     set background=dark
     colorscheme Parapluie
 
-    hi Normal guifg=#FFFFFF guibg=#232332
+    hi Normal guifg=#FFFFFF guibg=none
     hi Special guibg=none guifg=#FFFFFF
     hi NonText guifg=#575757 guibg=none
     hi MatchParen guibg=#323232 guifg=#888888
@@ -141,6 +151,10 @@ SetTheme = function()
     hi GitGutterChangeDelete guibg=#b5dafc guifg=#0CA8FC
     hi TrailingSpace guibg=#eeeeee guifg=#888888
 
+    hi CompeDocumentation guibg=#eeeeee guifg=#222222
+    hi CompeDocumentationBorder guibg=#eeeeee guifg=#000000
+    hi Pmenu guibg=#eeeeee guifg=#222222
+
     call matchadd('TrailingSpace', '\s\+$', 80)
     call SetSharedThemeColors()
   endfunction
@@ -185,6 +199,10 @@ if isModuleAvailable('lsp-colors') then
     Information = '#0db9d7',
     Hint = '#10B981'
   })
+end
+
+if isModuleAvailable('lspsaga') then
+  require('lspsaga').init_lsp_saga()
 end
 
 if isModuleAvailable('rust-tools') then
@@ -432,8 +450,8 @@ end
 if isModuleAvailable('gitsigns') then
   require('gitsigns').setup {
     signs = {
-      add          = {hl = 'GitSignsAdd'   , text = ' ', numhl='GitSignsAddNr'   , linehl='GitSignsAddLn'},
-      change       = {hl = 'GitSignsChange', text = ' ', numhl='GitSignsChangeNr', linehl='GitSignsChangeLn'},
+      add          = {hl = 'GitSignsAdd'   , text = '+', numhl='GitSignsAddNr'   , linehl='GitSignsAddLn'},
+      change       = {hl = 'GitSignsChange', text = '~', numhl='GitSignsChangeNr', linehl='GitSignsChangeLn'},
       delete       = {hl = 'GitSignsDelete', text = '_', numhl='GitSignsDeleteNr', linehl='GitSignsDeleteLn'},
       topdelete    = {hl = 'GitSignsDelete', text = '‾', numhl='GitSignsDeleteNr', linehl='GitSignsDeleteLn'},
       changedelete = {hl = 'GitSignsChange', text = '~', numhl='GitSignsChangeNr', linehl='GitSignsChangeLn'},
@@ -466,13 +484,14 @@ if isModuleAvailable('gitsigns') then
       follow_files = true
     },
     current_line_blame = false,
-    current_line_blame_delay = 1000,
-    current_line_blame_position = 'eol',
+    current_line_blame_opts = {
+      delay = 1000,
+      virt_text_pos = 'eol',
+    },
     sign_priority = 6,
     update_debounce = 100,
     status_formatter = nil, -- Use default
     word_diff = false,
-    use_decoration_api = true,
     use_internal_diff = false,  -- If luajit is present (false for windows)
   }
 end
@@ -546,10 +565,14 @@ local on_attach = function(_client, bufnr)
   vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>wl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', opts)
   vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
   vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
+  -- vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
+  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>ca', [[<cmd>lua require('lspsaga.codeaction').code_action()<CR>]], opts)
+  vim.api.nvim_buf_set_keymap(bufnr, 'v', '<leader>ca', [[<cmd>lua require('lspsaga.codeaction').range_code_action()<CR>]], opts)
+
   vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>e', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', opts)
   -- vim.api.nvim_buf_set_keymap(bufnr, 'n', '[d', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>', opts)
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', 'ge', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', opts)
+  -- vim.api.nvim_buf_set_keymap(bufnr, 'n', 'ge', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', opts)
+  vim.api.nvim_buf_set_keymap(bufnr, 'n', 'ge', [[<cmd>lua require'lspsaga.diagnostic'.lsp_jump_diagnostic_next()<CR>]], opts)
   -- vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>q', '<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>', opts)
 end
 
@@ -559,28 +582,98 @@ for _, lsp in ipairs(servers) do
   nvim_lsp[lsp].setup { on_attach = on_attach }
 end
 
-local sumneko_root_path = vim.fn.getenv("HOME").."/.local/bin/sumneko_lua" -- Change to your sumneko root installation
-local sumneko_binary_path = "/bin/linux/lua-language-server" -- Change to your OS specific output folder
-nvim_lsp.sumneko_lua.setup {
-  cmd = {sumneko_root_path .. sumneko_binary_path, "-E", sumneko_root_path.."/main.lua" };
-  on_attach = on_attach,
-  settings = {
-    Lua = {
-      runtime = {
-        version = 'LuaJIT',
-        path = vim.split(package.path, ';'),
+-- Completion Icons
+require('vim.lsp.protocol').CompletionItemKind = {
+  '', -- Text
+  '', -- Method
+  '', -- Function
+  '', -- Constructor
+  '', -- Field
+  '', -- Variable
+  '', -- Class
+  'ﰮ', -- Interface
+  '', -- Module
+  '', -- Property
+  '', -- Unit
+  '', -- Value
+  '了', -- Enum
+  '', -- Keyword
+  '﬌', -- Snippet
+  '', -- Color
+  '', -- File
+  '', -- Reference
+  '', -- Folder
+  '', -- EnumMember
+  '', -- Constant
+  '', -- Struct
+  '', -- Event
+  'ﬦ', -- Operator
+  '', -- TypeParameter
+}
+
+-- enable null-ls integration (optional)
+require("null-ls").config {}
+nvim_lsp["null-ls"].setup {}
+
+-- Typescript
+nvim_lsp.tsserver.setup {
+  on_attach = function(client, bufnr)
+    -- disable tsserver formatting if you plan on formatting via null-ls
+    client.resolved_capabilities.document_formatting = false
+    client.resolved_capabilities.document_range_formatting = false
+
+    on_attach()
+
+    local ts_utils = require("nvim-lsp-ts-utils")
+
+    -- defaults
+    ts_utils.setup {
+      debug = false,
+      disable_commands = false,
+      enable_import_on_completion = false,
+
+      -- import all
+      import_all_timeout = 5000, -- ms
+      import_all_priorities = {
+        buffers = 4, -- loaded buffer names
+        buffer_content = 3, -- loaded buffer content
+        local_files = 2, -- git files or files with relative path markers
+        same_file = 1, -- add to existing import statement
       },
-      diagnostics = {
-        globals = {'vim'},
-      },
-      workspace = {
-        library = {
-          [vim.fn.expand('$VIMRUNTIME/lua')] = true,
-          [vim.fn.expand('$VIMRUNTIME/lua/vim/lsp')] = true,
-        },
-      },
-    },
-  },
+      import_all_scan_buffers = 100,
+      import_all_select_source = false,
+
+      -- eslint
+      eslint_enable_code_actions = true,
+      eslint_enable_disable_comments = true,
+      eslint_bin = "eslint",
+      eslint_enable_diagnostics = true,
+      eslint_opts = {},
+
+      -- formatting
+      enable_formatting = true,
+      formatter = "prettier",
+      formatter_opts = {},
+
+      -- update imports on file move
+      update_imports_on_move = false,
+      require_confirmation_on_move = false,
+      watch_dir = nil,
+
+      -- filter diagnostics
+      filter_out_diagnostics_by_severity = {},
+      filter_out_diagnostics_by_code = {},
+    }
+
+    -- required to fix code action ranges and filter diagnostics
+    ts_utils.setup_client(client)
+
+    -- no default maps, so you may want to define some here
+    local opts = { silent = true }
+    vim.api.nvim_buf_set_keymap(bufnr, "n", "<leader>co", ":TSLspOrganize<CR>", opts)
+    vim.api.nvim_buf_set_keymap(bufnr, "n", "<leader>cr", ":TSLspRenameFile<CR>", opts)
+    vim.api.nvim_buf_set_keymap(bufnr, "n", "<leader>ci", ":TSLspImportAll<CR>", opts)
+  end
 }
 
 -- Map :Format to vim.lsp.buf.formatting()
@@ -598,15 +691,26 @@ require'compe'.setup {
   preselect = 'enable';
   throttle_time = 80;
   source_timeout = 200;
+  resolve_timeout = 800;
   incomplete_delay = 400;
-  max_abbr_width = 100;
-  max_kind_width = 100;
-  max_menu_width = 100;
-  documentation = true;
-
+  max_abbr_width = 80;
+  max_kind_width = 80;
+  max_menu_width = 80;
+  documentation = {
+    border = { "╭", "─", "╮", "│", "╯", "─", "╰", "│" },
+    winhighlight = "NormalFloat:CompeDocumentation,FloatBorder:CompeDocumentationBorder",
+    max_width = 80,
+    min_width = 40,
+    max_height = math.floor(vim.o.lines * 0.3),
+    min_height = 1,
+  };
   source = {
     path = true;
-    nvim_lsp = true;
+    buffer = false;
+    calc = {menu = ''};
+    nvim_lsp = {menu = '', priority = 10};
+    nvim_lua = {menu = ''};
+    treesitter = {menu = ''};
   };
 }
 
