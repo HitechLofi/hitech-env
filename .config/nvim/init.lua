@@ -1,4 +1,4 @@
-local theme = 'dark'
+local theme = 'light'
 
 -- Install packer
 local execute = vim.api.nvim_command
@@ -299,9 +299,6 @@ vim.o.mouse = "a"
 
 --Enable break indent
 vim.o.breakindent = true
-
---For windows set the terminal to powershell
-vim.cmd[[set shell=powershell.exe]]
 
 --Save undo history
 vim.cmd[[set undofile]]
