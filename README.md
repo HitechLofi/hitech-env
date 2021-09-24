@@ -21,3 +21,5 @@
 - bat
 - diff-so-pretty
 - tldr
+- lolcat
+- cowsay

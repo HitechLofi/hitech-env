@@ -4,30 +4,27 @@ local vi_mode_utils = require('feline.providers.vi_mode')
 local b = vim.b
 local fn = vim.fn
 
-local properties = {
-  force_inactive = {
-    filetypes = {},
-    buftypes = {},
-    bufnames = {}
-  }
+local force_inactive = {
+  filetypes = {},
+  buftypes = {},
+  bufnames = {}
 }
 
 local components = {
-  left = {
-    active = {},
-    inactive = {}
-  },
-  mid = {
-    active = {},
-    inactive = {}
-  },
-  right = {
-    active = {},
-    inactive = {}
-  }
+  active = {},
+  inactive = {}
 }
 
-properties.force_inactive.filetypes = {
+-- Insert three sections (left, mid and right) for the active statusline
+table.insert(components.active, {})
+table.insert(components.active, {})
+table.insert(components.active, {})
+
+-- Insert two sections (left and right) for the inactive statusline
+table.insert(components.inactive, {})
+table.insert(components.inactive, {})
+
+force_inactive.filetypes = {
   'NvimTree',
   'dbui',
   'packer',
@@ -36,17 +33,17 @@ properties.force_inactive.filetypes = {
   'fugitiveblame'
 }
 
-properties.force_inactive.buftypes = {
+force_inactive.buftypes = {
   'terminal'
 }
 
-components.left.active[1] = {
+table.insert(components.active[1], {
   provider = ' ',
   hl = {
     fg = 'subtlegray',
     bg = 'white'
   }
-}
+})
 
 -- get mode
 local mode_map = {
@@ -76,7 +73,7 @@ local function mode()
 	return mode_map[m]
 end
 
-components.left.active[2] = {
+table.insert(components.active[1], {
   provider = function()
     local mode = mode()
     return mode
@@ -93,9 +90,9 @@ components.left.active[2] = {
   end,
   left_sep = ' ',
   right_sep = ' '
-}
+})
 
-components.left.active[3] = {
+table.insert(components.active[1], {
   provider = 'file_info',
   hl = {
     fg = '#FFFFFF',
@@ -107,54 +104,54 @@ components.left.active[3] = {
     {str = ' ', hl = {bg = 'violet', fg = 'NONE'}}
   },
   right_sep = { 'right_rounded', ' ' }
-}
+})
 
-components.left.active[4] = {
+table.insert(components.active[1], {
   provider = 'diagnostic_errors',
   enabled = function() return lsp.diagnostics_exist('Error') end,
   right_sep = { ' ' },
   hl = { fg = '#ff759c' }
-}
+})
 
-components.left.active[5] = {
+table.insert(components.active[1], {
   provider = 'diagnostic_warnings',
   enabled = function() return lsp.diagnostics_exist('Warning') end,
   right_sep = { ' ' },
   hl = { fg = '#fff569' }
-}
+})
 
-components.left.active[6] = {
+table.insert(components.active[1], {
   provider = 'diagnostic_hints',
   enabled = function() return lsp.diagnostics_exist('Hint') end,
   right_sep = { ' ' },
   hl = { fg = '#69e6ff' }
-}
+})
 
-components.left.active[7] = {
+table.insert(components.active[1], {
   provider = 'diagnostic_info',
   enabled = function() return lsp.diagnostics_exist('Information') end,
   right_sep = { ' ' },
   hl = { fg = '#d4b3ff' }
-}
+})
 
-components.left.active[8] = {
+table.insert(components.active[1], {
   provider = '',
   left_sep = ' ',
   hl = {
     fg = 'subtlegray',
     bg = 'white'
   }
-}
+})
 
-components.right.active[1] = {
+table.insert(components.active[3], {
   provider = '',
   hl = {
     fg = 'subtlegray',
     bg = 'white'
   }
-}
+})
 
-components.right.active[2] = {
+table.insert(components.active[3], {
   provider = 'git_branch',
   hl = {
     fg = '#FFFFFF',
@@ -167,25 +164,25 @@ components.right.active[2] = {
 
     return val
   end
-}
+})
 
-components.right.active[3] = {
+table.insert(components.active[3], {
   provider = 'git_diff_added',
   hl = {
     fg = 'green',
     bg = 'black'
   }
-}
+})
 
-components.right.active[4] = {
+table.insert(components.active[3], {
   provider = 'git_diff_changed',
   hl = {
     fg = 'orange',
     bg = 'black'
   }
-}
+})
 
-components.right.active[5] = {
+table.insert(components.active[3], {
   provider = 'git_diff_removed',
   hl = {
     fg = 'red',
@@ -197,26 +194,26 @@ components.right.active[5] = {
 
     return val
   end
-}
+})
 
-components.right.active[6] = {
+table.insert(components.active[3], {
   provider = 'line_percentage',
   hl = {
     style = 'bold'
   },
   left_sep = ' ',
   right_sep = ' '
-}
+})
 
-components.right.active[7] = {
+table.insert(components.active[3], {
   provider = ' ',
   hl = {
     fg = 'subtlegray',
     bg = 'white'
   }
-}
+})
 
-components.left.inactive[1] = {
+table.insert(components.inactive[1], {
   provider = 'file_type',
   hl = {
     fg = '#FFFFFF',
@@ -240,10 +237,12 @@ components.left.inactive[1] = {
     },
     'right_rounded'
   }
-}
+})
 
 -- This table is equal to the default colors table
 local colors = {
+  bg = '#6B6BaB',
+  fg = '#FFFFFF',
   black = '#1B1B1B',
   subtlegray = '#6B6BaB',
   skyblue = '#50B0F0',
@@ -301,11 +300,9 @@ local vi_mode_colors = {
 }
 
 require('feline').setup({
-  default_bg = 'subtlegray',
-  default_fg = '#FFFFFF',
   colors = colors,
   separators = separators,
   components = components,
-  properties = properties,
+  force_inactive = force_inactive,
   vi_mode_colors = vi_mode_colors
 })
