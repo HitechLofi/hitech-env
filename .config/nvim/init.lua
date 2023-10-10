@@ -60,30 +60,42 @@ require('packer').startup(function()
     requires = {
       { "neovim/nvim-lspconfig" },
       { "nvim-lua/plenary.nvim" },
-      { "nvim-telescope/telescope.nvim" },
     },
     config = function()
-      require("telescope").load_extension("yaml_schema")
     end,
   }
 
-  -- use 'christoomey/vim-tmux-navigator' -- tmux
-  -- use 'tmux-plugins/vim-tmux-focus-events' -- tmux
+  use { "ibhagwan/fzf-lua",
+    -- optional for icon support
+    requires = { "nvim-tree/nvim-web-devicons" }
+  }
+
+  use {
+    'stevearc/oil.nvim',
+    config = function() require('oil').setup() end
+  }
+
+  use {
+    'gelguy/wilder.nvim',
+    config = function()
+      -- config goes here
+    end,
+  }
 
   use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' }  -- We recommend updating the parsers on update
   use 'nvim-treesitter/nvim-treesitter-context'
 
-  use "folke/trouble.nvim"
+  -- use "folke/trouble.nvim"
   use "dmmulroy/tsc.nvim"
 
   use "folke/neodev.nvim"
 
   -- UI to select things (files, grep results, open buffers...)
-  use {
-    'nvim-telescope/telescope.nvim',
-    requires = { {'nvim-lua/plenary.nvim'} }
-  }
-  use { "nvim-telescope/telescope-file-browser.nvim" }
+  -- use {
+  --   'nvim-telescope/telescope.nvim',
+  --   requires = { {'nvim-lua/plenary.nvim'} }
+  -- }
+  -- use { "nvim-telescope/telescope-file-browser.nvim" }
   -- Add indentation guides even on blank lines
   use 'lukas-reineke/indent-blankline.nvim'
   -- Add git related info in the signs columns and popups
@@ -95,23 +107,8 @@ require('packer').startup(function()
   use 'NvChad/nvim-colorizer.lua'
 
   use 'rcarriga/nvim-notify'
-  -- use({
-  --   "folke/noice.nvim",
-  --   config = function()
-  --     require("noice").setup()
-  --   end,
-  --   requires = {
-  --     -- if you lazy-load any plugin below, make sure to add proper `module="..."` entries
-  --     "MunifTanjim/nui.nvim",
-  --     -- OPTIONAL:
-  --     --   `nvim-notify` is only needed, if you want to use the notification view.
-  --     --   If not available, we use `mini` as the fallback
-  --     "rcarriga/nvim-notify",
-  --   }
-  -- })
 
-  use 'jose-elias-alvarez/nvim-lsp-ts-utils'
-  use 'jose-elias-alvarez/null-ls.nvim'
+  use 'nvimtools/none-ls.nvim'
   use 'simrat39/rust-tools.nvim'
 
   use 'jparise/vim-graphql'
@@ -298,7 +295,6 @@ local on_attach_lsp = function(client, bufnr)
   vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>d', '<cmd>lua vim.lsp.buf.type_definition()<CR>', attach_opts)
   vim.api.nvim_buf_set_keymap(bufnr, 'n', 'R', '<cmd>lua vim.lsp.buf.rename()<CR>', attach_opts)
   vim.api.nvim_buf_set_keymap(bufnr, 'n', 'C', '<cmd>lua vim.lsp.buf.code_action()<CR>', attach_opts)
-  vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>e', '<Cmd>TroubleToggle<cr>', attach_opts)
 
 
   -- vim.api.nvim_buf_set_keymap(bufnr, 'n', '<leader>e', '<cmd>lua vim.diagnostic.open_float()<CR>', attach_opts)
@@ -371,14 +367,14 @@ if isModuleAvailable('rust-tools') then
 
       runnables = {
         -- whether to use telescope for selection menu or not
-        use_telescope = true
+        use_telescope = false
 
         -- rest of the opts are forwarded to telescope
       },
 
       debuggables = {
         -- whether to use telescope for selection menu or not
-        use_telescope = true
+        use_telescope = false
 
         -- rest of the opts are forwarded to telescope
       },
@@ -707,91 +703,127 @@ end
 
 vim.api.nvim_set_keymap('n', '<F10>', '<cmd>lua ToggleMouse()<cr>', { noremap = true })
 
-local telescope_custom = require 'telescope-custom'
+-- local telescope_custom = require 'telescope-custom'
 
--- Telescope
-if isModuleAvailable('telescope') then
-  local file_browser_actions = require 'telescope'.extensions.file_browser.actions
-  local telescope_actions = require("telescope.actions")
-  require('telescope').setup {
-    defaults = {
-      prompt_prefix = ' ❯ ',
-      selection_caret = '❯ ',
-      mappings = {
-        i = {
-          ["<C-o>"] = false,
-          ["<C-u>"] = false,
-          ["<C-d>"] = false,
-          ["<esc>"] = telescope_actions.close,
-          ['<c-j>'] = telescope_actions.move_selection_next,
-          ['<c-k>'] = telescope_actions.move_selection_previous,
-          -- ['<c-p>'] = telescope_actions.cycle_history_prev,
-          -- ['<c-n>'] = telescope_actions.cycle_history_next,
-        },
-      },
-      file_ignore_patterns = { "node_modules", ".git", "dist", "model.json" },
-      layout_strategy = "vertical",
-      layout_config = {
-        horizontal = {
-          preview_cutoff = 0,
-          mirror = false,
-        },
-        vertical = {
-          preview_cutoff = 0,
-          mirror = false,
-        },
-      },
-      generic_sorter =  require'telescope.sorters'.get_fzy_sorter,
-      file_sorter =  require'telescope.sorters'.get_fzy_sorter,
-    },
-    extensions = {
-      file_browser = {
-        theme = 'ivy',
-        -- disables netrw and use telescope-file-browser in its place
-        hijack_netrw = false,
-        grouped = true,
-        respect_gitignore = true,
-        select_buffer = true,
-        hide_parent_dir = true,
-        mappings = {
-          ['i'] = {
-            ['<C-o>'] = file_browser_actions.goto_parent_dir,
-            ['<C-h>'] = file_browser_actions.goto_parent_dir,
-            ['<enter>'] = telescope_actions.select_default,
-            ['<C-l>'] = telescope_actions.select_default,
-            ['<C-r>'] = file_browser_actions.rename,
-            ['<C-a>'] = file_browser_actions.create,
-            ['<C-m>'] = file_browser_actions.move,
-            ['<C-d>'] = file_browser_actions.remove,
-            -- your custom insert mode mappings
-          },
-          ['n'] = {
-            -- your custom normal mode mappings
-          },
-        },
-      },
-    },
-    pickers = {
-      oldfiles = {
-        sort_lastused = true,
-        cwd_only = true,
-      },
-      live_grep = {
-        path_display = { 'shorten' },
-        mappings = {
-          i = {
-            ['<c-f>'] = telescope_custom.actions.set_extension,
-            ['<c-l>'] = telescope_custom.actions.set_folders,
-          },
-        },
-      },
-    },
+if isModuleAvailable('fzf-lua') then
+  require('fzf-lua').setup({})
+end
+
+if isModuleAvailable('wilder') then
+  local gradient = {
+    '#f4468f', '#fd4a85', '#ff507a', '#ff566f', '#ff5e63',
+    '#ff6658', '#ff704e', '#ff7a45', '#ff843d', '#ff9036',
+    '#f89b31', '#efa72f', '#e6b32e', '#dcbe30', '#d2c934',
+    '#c8d43a', '#bfde43', '#b6e84e', '#aff05b'
   }
 
-  -- To get telescope-file-browser loaded and working with telescope,
-  -- you need to call load_extension, somewhere after setup function:
-  require("telescope").load_extension "file_browser"
+  local wilder = require('wilder')
+  wilder.setup({ modes = {':', '/', '?'} })
+
+  for i, fg in ipairs(gradient) do
+    gradient[i] = wilder.make_hl('WilderGradient' .. i, 'Pmenu', {{a = 1}, {a = 1}, {foreground = fg}})
+  end
+  wilder.set_option('renderer', wilder.popupmenu_renderer(
+    wilder.popupmenu_border_theme({
+      highlights = {
+        gradient = gradient,
+        border = 'Normal', -- highlight to use for the border
+      },
+      highlighter = wilder.highlighter_with_gradient({
+        wilder.basic_highlighter(), -- or wilder.lua_fzy_highlighter(),
+      }),
+      left = {' ', wilder.popupmenu_devicons()},
+      right = {' ', wilder.popupmenu_scrollbar()},
+      -- 'single', 'double', 'rounded' or 'solid'
+      -- can also be a list of 8 characters, see :h wilder#popupmenu_border_theme() for more details
+      border = 'rounded',
+    })
+  ))
 end
+
+-- Telescope
+-- if isModuleAvailable('telescope') then
+--   local file_browser_actions = require 'telescope'.extensions.file_browser.actions
+--   local telescope_actions = require("telescope.actions")
+--   require('telescope').setup {
+--     defaults = {
+--       prompt_prefix = ' ❯ ',
+--       selection_caret = '❯ ',
+--       mappings = {
+--         i = {
+--           ["<C-o>"] = false,
+--           ["<C-u>"] = false,
+--           ["<C-d>"] = false,
+--           ["<esc>"] = telescope_actions.close,
+--           ['<c-j>'] = telescope_actions.move_selection_next,
+--           ['<c-k>'] = telescope_actions.move_selection_previous,
+--           -- ['<c-p>'] = telescope_actions.cycle_history_prev,
+--           -- ['<c-n>'] = telescope_actions.cycle_history_next,
+--         },
+--       },
+--       file_ignore_patterns = { "node_modules", ".git", "dist", "model.json" },
+--       layout_strategy = "vertical",
+--       layout_config = {
+--         horizontal = {
+--           preview_cutoff = 0,
+--           mirror = false,
+--         },
+--         vertical = {
+--           preview_cutoff = 0,
+--           mirror = false,
+--         },
+--       },
+--       generic_sorter =  require'telescope.sorters'.get_fzy_sorter,
+--       file_sorter =  require'telescope.sorters'.get_fzy_sorter,
+--     },
+--     extensions = {
+--       file_browser = {
+--         theme = 'ivy',
+--         -- disables netrw and use telescope-file-browser in its place
+--         hijack_netrw = false,
+--         grouped = true,
+--         respect_gitignore = true,
+--         select_buffer = true,
+--         hide_parent_dir = true,
+--         mappings = {
+--           ['i'] = {
+--             ['<C-o>'] = file_browser_actions.goto_parent_dir,
+--             ['<C-h>'] = file_browser_actions.goto_parent_dir,
+--             ['<enter>'] = telescope_actions.select_default,
+--             ['<C-l>'] = telescope_actions.select_default,
+--             ['<C-r>'] = file_browser_actions.rename,
+--             ['<C-a>'] = file_browser_actions.create,
+--             ['<C-m>'] = file_browser_actions.move,
+--             ['<C-d>'] = file_browser_actions.remove,
+--             -- your custom insert mode mappings
+--           },
+--           ['n'] = {
+--             -- your custom normal mode mappings
+--           },
+--         },
+--       },
+--     },
+--     pickers = {
+--       oldfiles = {
+--         sort_lastused = true,
+--         cwd_only = true,
+--       },
+--       live_grep = {
+--         path_display = { 'shorten' },
+--         mappings = {
+--           i = {
+--             ['<c-f>'] = telescope_custom.actions.set_extension,
+--             ['<c-l>'] = telescope_custom.actions.set_folders,
+--           },
+--         },
+--       },
+--     },
+--   }
+
+--   -- To get telescope-file-browser loaded and working with telescope,
+--   -- you need to call load_extension, somewhere after setup function:
+--   require("telescope").load_extension "file_browser"
+-- end
 
 if isModuleAvailable('feline') then
   -- require('feline').setup()
@@ -855,21 +887,21 @@ if isModuleAvailable('gitsigns') then
   }
 end
 
---Add leader shortcuts
-vim.api.nvim_set_keymap('n', '<leader><leader>', [[<cmd>lua require('telescope.builtin').find_files()<cr>]], { noremap = true, silent = true})
-vim.api.nvim_set_keymap('n', '<leader>n', [[<cmd>lua require('telescope.builtin').resume()<cr>]], { noremap = true, silent = true})
-vim.api.nvim_set_keymap('n', '<leader>b', [[<cmd>lua require('telescope.builtin').buffers()<cr>]], { noremap = true, silent = true})
-vim.api.nvim_set_keymap('n', '<leader>o', '<cmd>Telescope file_browser path=%:p:h<cr>', { noremap = true })
-vim.api.nvim_set_keymap('n', '<leader>v', [[<cmd>lua require('telescope.builtin').oldfiles()<cr>]], { noremap = true, silent = true})
-vim.api.nvim_set_keymap('n', '<leader>r', [[<cmd>lua require('telescope.builtin').grep_string()<cr>]], { noremap = true, silent = true})
-vim.api.nvim_set_keymap('n', '<leader>gf', [[<cmd>silent !open %:h<cr>]], { noremap = true, silent = true})
-vim.api.nvim_set_keymap('n', '<leader>l', [[<cmd>vsplit<cr><C-w>l]], { noremap = true, silent = true})
-vim.api.nvim_set_keymap('n', '<leader>j', [[<cmd>split<cr><C-w>j]], { noremap = true, silent = true})
-vim.api.nvim_set_keymap('n', '<leader>gc', [[<cmd>lua require('telescope.builtin').git_commits()<cr>]], { noremap = true, silent = true})
-vim.api.nvim_set_keymap('n', '<leader>gb', [[<cmd>lua require('telescope.builtin').git_branches()<cr>]], { noremap = true, silent = true})
-vim.api.nvim_set_keymap('n', '<leader>gg', [[<cmd>lua require('telescope.builtin').git_status()<cr>]], { noremap = true, silent = true})
-vim.api.nvim_set_keymap('n', '<leader>gC', [[<cmd>lua require('telescope.builtin').git_bcommits()<cr>]], { noremap = true, silent = true})
-map('n', '<leader>f', telescope_custom.live_grep)
+--Navigation shortcuts
+-- vim.api.nvim_set_keymap('n', '<leader>o', '<cmd>Telescope file_browser path=%:p:h<cr>', { noremap = true })
+-- map('n', '<leader>l', [[<cmd>vsplit<cr><C-w>l]])
+-- map('n', '<leader>j', [[<cmd>split<cr><C-w>j]])
+map('n', '<leader>o', '<cmd>Oil<cr>')
+map('n', '<leader>gf', [[<cmd>silent !open %:h<cr>]])
+map('n', '<leader>j', [[<cmd>FzfLua lsp_document_symbols<cr>]])
+map('n', '<leader>l', [[<cmd>FzfLua lsp_references<cr>]])
+map('n', '<leader>f', [[<cmd>FzfLua grep_project<cr>]])
+map('v', '<leader>f', [[<cmd>FzfLua grep_visual<cr>]])
+map('n', '<leader><leader>', [[<cmd>FzfLua git_files<cr>]])
+map('n', '<leader>gg', [[<cmd>FzfLua git_status<cr>]])
+map('n', '<leader>n', [[<cmd>FzfLua resume<cr>]])
+map('n', '<leader>i', [[<cmd>FzfLua changes<cr>]])
+map('n', '<leader>e', [[<cmd>FzfLua lsp_document_diagnostics<cr>]])
 
 -- Change preview window location
 vim.g.splitbelow = true
@@ -1148,15 +1180,15 @@ nvim_lsp.ccls.setup {
 }
 
 -- enable yaml
-if isModuleAvailable("yaml-companion") then
-  local yaml_cfg = require("yaml-companion").setup({
-    -- Add any options here, or leave empty to use the default settings
-    lspconfig = {
-      on_attach = on_attach_lsp,
-    },
-  })
-  nvim_lsp.yamlls.setup(yaml_cfg)
-end
+-- if isModuleAvailable("yaml-companion") then
+--   local yaml_cfg = require("yaml-companion").setup({
+--     -- Add any options here, or leave empty to use the default settings
+--     lspconfig = {
+--       on_attach = on_attach_lsp,
+--     },
+--   })
+--   nvim_lsp.yamlls.setup(yaml_cfg)
+-- end
 
 -- svelte
 nvim_lsp.svelte.setup {
@@ -1263,50 +1295,6 @@ nvim_lsp.tsserver.setup {
     client.server_capabilities.documentRangeFormattingProvider = false
 
     on_attach_lsp(client, bufnr)
-
-    local ts_utils = require("nvim-lsp-ts-utils")
-
-    -- defaults
-    ts_utils.setup {
-      debug = false,
-      disable_commands = false,
-      enable_import_on_completion = false,
-
-      -- import all
-      import_all_timeout = 5000, -- ms
-      import_all_priorities = {
-        buffers = 4, -- loaded buffer names
-        buffer_content = 3, -- loaded buffer content
-        local_files = 2, -- git files or files with relative path markers
-        same_file = 1, -- add to existing import statement
-      },
-      import_all_scan_buffers = 100,
-      import_all_select_source = false,
-
-      -- eslint
-      eslint_enable_code_actions = true,
-      eslint_enable_disable_comments = true,
-      eslint_bin = "eslint",
-      eslint_enable_diagnostics = true,
-      eslint_opts = {},
-
-      -- formatting
-      enable_formatting = true,
-      formatter = "prettier",
-      formatter_opts = {},
-
-      -- update imports on file move
-      update_imports_on_move = false,
-      require_confirmation_on_move = false,
-      watch_dir = nil,
-
-      -- filter diagnostics
-      filter_out_diagnostics_by_severity = {},
-      filter_out_diagnostics_by_code = {},
-    }
-
-    -- required to fix code action ranges and filter diagnostics
-    ts_utils.setup_client(client)
 
     if client.server_capabilities.documentHighlight then
       vim.cmd [[
