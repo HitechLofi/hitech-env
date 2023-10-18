@@ -207,13 +207,18 @@ SetTheme = function()
     hi TabLineFill guibg=none guifg=#222244 gui=none
     hi MatchParen guibg=#eeeeee guifg=#777777
     hi Search guibg=#FECB32 guifg=none gui=bold
+    hi IncSearch guibg=#FECB32 guifg=none gui=bold
+    hi FzfLuaBufName guifg=#222244 gui=none guibg=none
+    hi FzfLuaBufNr guifg=#222244 gui=none guibg=none
+    hi FzfLuaBufLineNr guifg=#222244 gui=none guibg=none
     hi StatusLine guibg=none guifg=#554477 gui=none
     hi StatusLineNC guibg=none guifg=#554477 gui=none
     hi Comment guibg=NONE guifg=#aaaaaa gui=italic cterm=italic
     hi RustHints guibg=#EAF9FF guifg=#006CAD gui=none
     hi SignColumn guibg=none
-    hi CursorLineNr guibg=#123123
+    hi CursorLineNr guibg=#b5dafc
     hi CursorLine guibg=none guifg=#000000 gui=bold
+    hi Cursor guibg=none guifg=#0CA8FC
     hi LineNr guibg=none guifg=#aaaaaa
     hi GitGutterAdd guibg=#baf49c guifg=#3a990a
     hi GitGutterChange guibg=#b5dafc guifg=#0CA8FC
@@ -706,7 +711,42 @@ vim.api.nvim_set_keymap('n', '<F10>', '<cmd>lua ToggleMouse()<cr>', { noremap = 
 -- local telescope_custom = require 'telescope-custom'
 
 if isModuleAvailable('fzf-lua') then
-  require('fzf-lua').setup({})
+  require('fzf-lua').setup({
+    winopts = {
+      height=1.0,
+      width=1.0,
+      preview = {
+        title=false,
+        hidden = "nohidden",
+        layout = "vertical",
+        vertical='up:30%',
+        wrap='wrap',
+      },
+    },
+    hls={
+      preview_title="IncSearch",
+      search="IncSearch",
+      buf_linenr="IncSearch",
+      buf_name="Normal"
+    },
+    file_icon_padding = ' ',
+    files = {
+      prompt            = 'Files❯ ',
+      multiprocess      = true,           -- run command in a separate process
+      git_icons         = true,           -- show git icons?
+      file_icons        = true,           -- show file icons?
+      color_icons       = true,           -- colorize file|git icons
+      find_opts         = [[-type f -not -path '*/\.git/*' -printf '%P\n']],
+      rg_opts           = "--color=never --files --hidden --follow -g '!.git'",
+      fd_opts           = "--color=never --type f --hidden --follow --exclude .git",
+    }
+  })
+  vim.api.nvim_set_hl(0, "FzfLuaTabTitle", { link = "Normal" })
+  vim.api.nvim_set_hl(0, "FzfLuaBufName", { link = "Normal" })
+  vim.api.nvim_set_hl(0, "FzfLuaHeaderText", { link = "Normal" })
+  vim.api.nvim_set_hl(0, "FzfLuaHeaderBind", { link = "Normal" })
+  vim.api.nvim_set_hl(0, "FzfLuaBufNr", { link = "Normal" })
+  vim.api.nvim_set_hl(0, "FzfLuaBufLineNr", { link = "Normal" })
 end
 
 if isModuleAvailable('wilder') then
@@ -897,7 +937,7 @@ map('n', '<leader>j', [[<cmd>FzfLua lsp_document_symbols<cr>]])
 map('n', '<leader>l', [[<cmd>FzfLua lsp_references<cr>]])
 map('n', '<leader>f', [[<cmd>FzfLua grep_project<cr>]])
 map('v', '<leader>f', [[<cmd>FzfLua grep_visual<cr>]])
-map('n', '<leader><leader>', [[<cmd>FzfLua git_files<cr>]])
+map('n', '<leader><leader>', [[<cmd>FzfLua files<cr>]])
 map('n', '<leader>gg', [[<cmd>FzfLua git_status<cr>]])
 map('n', '<leader>n', [[<cmd>FzfLua resume<cr>]])
 map('n', '<leader>i', [[<cmd>FzfLua changes<cr>]])

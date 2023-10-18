@@ -15,8 +15,9 @@ unsetopt CORRECT
 unsetopt CORRECT_ALL
 DISABLE_CORRECTION="true"
 #   
+# %F{#4040a4} $(kube_ps1)
 PROMPT='%F{#4040a4}   %f'
-RPROMPT='%F{#4040a4} %F{blue}$(git_branch_name) %F{#4040a4} $(kube_ps1) %F{#4040a4} %F{blue}%1~ %F{#4040a4}%F{blue}%@'
+RPROMPT='%F{#4040a4} %F{blue}%1~ %F{#4040a4} %F{blue}$(git_branch_name) %F{#4040a4} %F{blue}%@'
 XDG_CONFIG_HOME=${HOME}/.config/
 VISUAL=nvim
 EDITOR="$VISUAL"
@@ -25,6 +26,7 @@ NPM_PACKAGES="${HOME}/.npm-packages"
 BUN_PACKAGES="${HOME}/.bun/bin"
 PATH="$PATH:$NPM_PACKAGES/bin:$BUN_PACKAGES"
 MANPATH="${MANPATH-$(manpath)}:$NPM_PACKAGES/share/man"
+export RIPGREP_CONFIG_PATH=${HOME}/.ripgreprc
 setopt globdots
 
 # Aliases
@@ -36,23 +38,19 @@ alias image="kitty +kitten icat"
 alias book='buku --suggest --colors aAeXf --stag'
 alias bookb='ff $(buku --colors aAeXf -p -f4 | fzf -m --reverse --preview "buku -p {1}" --preview-window "up,20%,border-bottom,+{2}+3/3,~3" | cut -f2)'
 alias ff='/Applications/Firefox.app/Contents/MacOS/firefox --new-tab --url'
-alias ll='ls -al'
 alias reset='source ${HOME}/.zshrc'
 alias python=python3
 alias pip=pip3
-alias ls='ls -GFhxA'
-alias l='ls -GFhxA'
-alias la='ls -A'
-alias ll='ls -lA'
-alias c='cd'
+alias l='exa --git --icons -a'
+alias ls='exa --tree --level 1 --git --icons'
+alias la='exa --tree --level 1 --git --icons --long'
 alias npm='pnpm'
 alias calc='qalc'
 alias dict='trans'
-alias cx='cd ../'
 alias nv='nvim'
 alias neo='nvim'
 alias clear='clear;startupRun'
-alias c='clear'
+alias cl='clear'
 alias g='git'
 alias b='bun'
 alias tm="tmux attach -t 0"
@@ -90,10 +88,10 @@ _gen_fzf_default_opts() {
   local cyan="37"
   local green="64"
   export FZF_DEFAULT_OPTS="
-  --color fg:-1,bg:-1,hl:$blue,fg+:$base02,bg+:$base2,hl+:$blue
-  --color info:$violet,prompt:$violet,pointer:$base03,marker:$base03,spinner:$blue
-  --preview 'bat --theme=GitHub --color=always --style=header,grid --line-range :8000 {}'
-  --bind ctrl-j:preview-down,ctrl-k:preview-up,up:preview-up,down:preview-down
+   --color fg:-1,bg:-1,hl:$blue,fg+:$base02,bg+:$base2,hl+:$blue
+   --color info:$violet,prompt:$violet,pointer:$base03,marker:$base03,spinner:$blue
+   --preview 'bat --theme=GitHub --color=always --style=header,grid --line-range :8000 {}'
+   --bind ctrl-j:preview-down,ctrl-k:preview-up,up:preview-up,down:preview-down
   "
   export FZF_PREVIEW_COMMAND="bat --theme=GitHub --color=always --style=header,grid --line-range :8000 {}"
 }
@@ -158,7 +156,7 @@ function getQuote() {
 }
 
 function getRandomGif() {
-  gif="api.giphy.com/v1/gifs/random?api_key=$GIPHY_API_KEY&tag=vaporwave"
+  gif="api.giphy.com/v1/gifs/random?api_key=iwKGIZ30tHLZ2wOYGhJFj0gIxys0TtLt&tag=vaporwave"
   gifUrl=$(curl -s $gif -H "Accept: application/json" | jaq .data.images.downsized.url)
 
   regex='^"(https?|ftp|file)://[-A-Za-z0-9\+&@#/%?=~_|!:,.;]*[-A-Za-z0-9\+&@#/%=~_|]\.[-A-Za-z0-9\+&@#/%?=~_|!:,.;]*[-A-Za-z0-9\+&@#/%=~_|]"$'
@@ -173,10 +171,16 @@ function getRandomGif() {
 
 # getQuote | cowsay | lolcat
 function startupRun() {
+  echo "「$(getQuote)」" | lolcat
   # getRandomGif
-  getQuote | lolcat
+  # ls
 }
 startupRun
+
+function c() {
+  cd "$1"
+  ls
+}
 
 # Find and set branch name var if in git repository.
 function git_branch_name()
@@ -192,16 +196,16 @@ function git_branch_name()
 
 # Usage: palette
 palette() {
-  local -a colors
-  for i in {000..255}; do
-    colors+=("%F{$i}$i%f")
-  done
-  print -cP $colors
+    local -a colors
+    for i in {000..255}; do
+        colors+=("%F{$i}$i%f")
+    done
+    print -cP $colors
 }
 # Usage: printc COLOR_CODE
 printc() {
-  local color="%F{$1}"
-  echo -E ${(qqqq)${(%)color}}
+    local color="%F{$1}"
+    echo -E ${(qqqq)${(%)color}}
 }
 
 function printcolors() {
@@ -230,6 +234,8 @@ set -o ignoreeof
 export PATH="/Users/arthur/.rd/bin:$PATH"
 ### MANAGED BY RANCHER DESKTOP END (DO NOT EDIT)
 
+export K9SCONFIG=$HOME/.config/k9s
+
 # kubectl completions
 source <(kubectl completion zsh)
 
@@ -246,8 +252,13 @@ KUBE_PS1_NS_COLOR='blue'
 
 source ~/.zsh/fzf-tab/fzf-tab.plugin.zsh
 FZF_TAB_GROUP_COLORS=(
-  $'\033[38;5;18m' $'\033[38;5;18m' $'\033[38;5;18m' $'\033[38;5;18m' $'\033[38;5;18m' $'\033[38;5;18m' $'\033[38;5;18m' \
-  $'\033[38;5;18m' $'\033[38;5;18m' $'\033[38;5;18m' $'\033[38;5;18m' $'\033[38;5;18m' \
-  $'\033[38;5;18m' $'\033[38;5;18m' $'\033[38;5;18m' $'\033[38;5;18m'
+    $'\033[38;5;18m' $'\033[38;5;18m' $'\033[38;5;18m' $'\033[38;5;18m' $'\033[38;5;18m' $'\033[38;5;18m' $'\033[38;5;18m' \
+    $'\033[38;5;18m' $'\033[38;5;18m' $'\033[38;5;18m' $'\033[38;5;18m' $'\033[38;5;18m' \
+    $'\033[38;5;18m' $'\033[38;5;18m' $'\033[38;5;18m' $'\033[38;5;18m'
 )
 zstyle ':fzf-tab:*' group-colors $FZF_TAB_GROUP_COLORS
+
+# Secrets
+export SSH_AUTH_SOCK=/Users/arthur/Library/Containers/com.maxgoedjen.Secretive.SecretAgent/Data/socket.ssh
+
+eval "$(zoxide init --cmd j zsh)"
