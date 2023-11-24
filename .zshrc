@@ -16,8 +16,10 @@ unsetopt CORRECT_ALL
 DISABLE_CORRECTION="true"
 #   
 # %F{#4040a4} $(kube_ps1)
-PROMPT='%F{#4040a4}   %f'
-RPROMPT='%F{#4040a4} %F{blue}%1~ %F{#4040a4} %F{blue}$(git_branch_name) %F{#4040a4} %F{blue}%@'
+# PROMPT='%F{#4040a4}   %f'
+# RPROMPT='%F{#4040a4} %F{blue}%1~ %F{#4040a4} %F{blue}$(git_branch_name) %F{#4040a4} %F{blue}%@'
+PROMPT='%F{#4040a4}󰄛  %f'
+RPROMPT='%F{#4040a4} %F{blue}%1~ %F{#4040a4} %F{blue}$(git_branch_name) %F{#4040a4}󱦟 %F{blue}%@'
 XDG_CONFIG_HOME=${HOME}/.config/
 VISUAL=nvim
 EDITOR="$VISUAL"
@@ -41,9 +43,9 @@ alias ff='/Applications/Firefox.app/Contents/MacOS/firefox --new-tab --url'
 alias reset='source ${HOME}/.zshrc'
 alias python=python3
 alias pip=pip3
-alias l='exa --git --icons -a'
-alias ls='exa --tree --level 1 --git --icons'
-alias la='exa --tree --level 1 --git --icons --long'
+alias l='eza --git --icons -a'
+alias ls='eza --git --icons -a'
+alias la='eza --tree --level 1 --git --icons --long'
 alias npm='pnpm'
 alias calc='qalc'
 alias dict='trans'
@@ -58,6 +60,7 @@ alias rr="cargo run"
 alias t-d="cd ~/Developer"
 alias t-fs2="cd ~/Developer/fs2"
 alias t-meuni="cd ~/Developer/meuni"
+alias meuni="cd ~/Developer/meuni && ./dev.sh"
 alias t-odyssey="cd ~/Developer/odyssey-elm"
 
 # Autoload
@@ -231,8 +234,10 @@ set -o ignoreeof
 . /opt/homebrew/opt/asdf/libexec/asdf.sh
 
 ### MANAGED BY RANCHER DESKTOP START (DO NOT EDIT)
-export PATH="/Users/arthur/.rd/bin:$PATH"
+PATH="/Users/arthur/.rd/bin:$PATH"
 ### MANAGED BY RANCHER DESKTOP END (DO NOT EDIT)
+
+PATH="$PATH:/Applications/WezTerm.app/Contents/MacOS"
 
 export K9SCONFIG=$HOME/.config/k9s
 
@@ -261,4 +266,9 @@ zstyle ':fzf-tab:*' group-colors $FZF_TAB_GROUP_COLORS
 # Secrets
 export SSH_AUTH_SOCK=/Users/arthur/Library/Containers/com.maxgoedjen.Secretive.SecretAgent/Data/socket.ssh
 
+# Python
+# export PYTHONPATH=/opt/homebrew/lib/python3.12/site-packages
+# export PATH="/opt/homebrew/opt/python@3.12/libexec/bin:$PATH"
+
+export PATH
 eval "$(zoxide init --cmd j zsh)"
